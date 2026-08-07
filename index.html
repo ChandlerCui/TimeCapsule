@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeCapsule</title>
+    <meta http-equiv="refresh" content="0; url=pages/diary-list.html">
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            background: #f4f7fc;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+        }
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 12px;
+            color: #0a84ff;
+            font-size: 15px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0a84ff;
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.25; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <div class="dot"></div>
+        <span>正在打开 TimeCapsule…</span>
+    </div>
+    <noscript>
+        <p style="text-align:center;padding:40px 20px;color:#7a828f;">
+            TimeCapsule 需要启用 JavaScript 才能使用。
+            <a href="pages/diary-list.html" style="color:#0a84ff;">点击此处直接进入日记列表</a>
+        </p>
+    </noscript>
+    <script>
+        window.location.replace('pages/diary-list.html');
+    </script>
+</body>
+</html>
