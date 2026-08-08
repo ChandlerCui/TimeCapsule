@@ -132,33 +132,6 @@ body {
 }
 
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
-    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
-    <style type="text/tailwindcss">
-  @theme inline {
-    --color-background: var(--brand-background);
-    --color-foreground: var(--brand-foreground);
-    --color-card: var(--brand-card);
-    --color-card-foreground: var(--brand-card-foreground);
-    --color-popover: var(--brand-popover);
-    --color-popover-foreground: var(--brand-popover-foreground);
-    --color-primary: var(--brand-primary);
-    --color-primary-foreground: var(--brand-primary-foreground);
-    --color-muted: var(--brand-muted);
-    --color-muted-foreground: var(--brand-muted-foreground);
-    --color-border: var(--brand-border);
-    --color-input: var(--brand-input);
-    --color-ring: var(--brand-ring);
-    --radius-sm: var(--brand-radius-sm);
-    --radius-md: var(--brand-radius-md);
-    --radius-lg: var(--brand-radius-lg);
-  }
-  @layer base {
-    body { background: var(--brand-background); color: var(--brand-foreground); }
-    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
-    th { @apply whitespace-nowrap; }
-  }
-    </style>
     <style id="semantic-token-fallback">
       .bg-background { background-color: var(--brand-background); }
       .text-background { color: var(--brand-background); }
@@ -235,11 +208,11 @@ body {
     <header class="app-bar">
         <div class="app-bar-inner">
             <a href="diary-list.html" class="brand" aria-label="TimeCapsule 首页">
-                <span class="brand-badge"><i data-lucide="book-open"></i></span>
+                <span class="brand-badge"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
                 <span class="brand-name">TimeCapsule</span>
             </a>
             <a href="diary-editor.html?new=1" class="btn-new" data-dom-id="new-entry">
-                <i data-lucide="plus"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                 <span>写日记</span>
             </a>
         </div>
@@ -253,7 +226,7 @@ body {
 
         <section class="toolbar" aria-label="搜索与排序">
             <div class="search-box">
-                <i data-lucide="search"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
                 <input id="search-input" data-dom-id="search-input" type="search" placeholder="搜索日记内容…" autocomplete="off" aria-label="搜索日记内容">
             </div>
             <div class="seg" data-dom-id="sort-control" role="group" aria-label="排序方式">
@@ -265,75 +238,17 @@ body {
         <p id="search-hint" class="search-hint is-hidden" aria-live="polite"></p>
 
         <section id="diary-list" class="diary-list" aria-label="日记列表">
-            <div class="diary-group" data-date="2026-08-05">
-                <h2 class="group-title">2026年8月5日 · 星期三</h2>
-                <div class="group-cards">
-                    <a class="entry-card ios-card-raised" href="diary-editor.html" data-dom-id="entry-open" data-date="2026-08-05" data-title="窗边的一杯热咖啡" data-preview="清晨六点半，窗外的梧桐叶还挂着露水。冲了一杯手冲咖啡，香气慢慢散开，忽然觉得日子也可以慢一点。">
-                        <div class="entry-thumb"><img src="../assets/diary-coffee.jpg" alt="窗边的一杯热咖啡" loading="lazy"></div>
-                        <div class="entry-body">
-                            <h3 class="entry-title">窗边的一杯热咖啡</h3>
-                            <p class="entry-preview">清晨六点半，窗外的梧桐叶还挂着露水。冲了一杯手冲咖啡，香气慢慢散开，忽然觉得日子也可以慢一点。</p>
-                            <div class="entry-meta">
-                                <span class="meta-time">07:42</span>
-                                <span class="meta-pill weather"><i data-lucide="sun"></i>晴</span>
-                                <span class="meta-pill image"><i data-lucide="image"></i>含图</span>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="entry-arrow"></i>
-                    </a>
-                    <a class="entry-card ios-card-raised" href="diary-editor.html" data-dom-id="entry-open" data-date="2026-08-05" data-title="傍晚在公园散步" data-preview="下班后绕去公园走了两圈，晚风很轻。看见一个小男孩追着泡泡跑，笑得特别大声，原来快乐可以这么简单。">
-                        <div class="entry-thumb"><img src="../assets/diary-park.jpg" alt="傍晚在公园散步" loading="lazy"></div>
-                        <div class="entry-body">
-                            <h3 class="entry-title">傍晚在公园散步</h3>
-                            <p class="entry-preview">下班后绕去公园走了两圈，晚风很轻。看见一个小男孩追着泡泡跑，笑得特别大声，原来快乐可以这么简单。</p>
-                            <div class="entry-meta">
-                                <span class="meta-time">19:15</span>
-                                <span class="meta-pill weather"><i data-lucide="cloud-sun"></i>多云</span>
-                                <span class="meta-pill image"><i data-lucide="image"></i>含图</span>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="entry-arrow"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="diary-group" data-date="2026-08-04">
-                <h2 class="group-title">2026年8月4日 · 星期二</h2>
-                <div class="group-cards">
-                    <a class="entry-card ios-card-raised" href="diary-editor.html" data-dom-id="entry-open" data-date="2026-08-04" data-title="重读《小王子》" data-preview="睡前又翻了几页《小王子》，狐狸说的话依旧让人心里一暖。长大以后，才慢慢听懂这些温柔的道理。">
-                        <div class="entry-thumb"><img src="../assets/diary-book.jpg" alt="重读《小王子》" loading="lazy"></div>
-                        <div class="entry-body">
-                            <h3 class="entry-title">重读《小王子》</h3>
-                            <p class="entry-preview">睡前又翻了几页《小王子》，狐狸说的话依旧让人心里一暖。长大以后，才慢慢听懂这些温柔的道理。</p>
-                            <div class="entry-meta">
-                                <span class="meta-time">23:02</span>
-                                <span class="meta-pill weather"><i data-lucide="cloud"></i>阴</span>
-                                <span class="meta-pill image"><i data-lucide="image"></i>含图</span>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="entry-arrow"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="diary-group" data-date="2026-08-02">
-                <h2 class="group-title">2026年8月2日 · 星期日</h2>
-                <div class="group-cards">
-                    <a class="entry-card ios-card-raised" href="diary-editor.html" data-dom-id="entry-open" data-date="2026-08-02" data-title="给妈妈打了个电话" data-preview="周末给妈妈打了四十分钟的电话，聊家常也聊最近的烦恼。挂了电话之后，心里踏实了很多，这就是家人的力量吧。">
-                        <div class="entry-body">
-                            <h3 class="entry-title">给妈妈打了个电话</h3>
-                            <p class="entry-preview">周末给妈妈打了四十分钟的电话，聊家常也聊最近的烦恼。挂了电话之后，心里踏实了很多，这就是家人的力量吧。</p>
-                            <div class="entry-meta">
-                                <span class="meta-time">21:30</span>
-                                <span class="meta-pill weather"><i data-lucide="cloud-rain"></i>阵雨</span>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="entry-arrow"></i>
-                    </a>
-                </div>
-            </div>
+            <!-- 日记由脚本动态渲染：示例日记 + 本地保存的用户日记 -->
         </section>
 
+        <div id="list-empty-state" class="empty-state is-hidden" role="status">
+            <span class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
+            <p class="empty-title">还没有日记</p>
+            <p class="empty-desc">点击右上角"写日记"，记录你的第一篇时光胶囊</p>
+        </div>
+
         <div id="search-empty-state" class="empty-state is-hidden" role="status">
-            <span class="empty-icon"><i data-lucide="search-x"></i></span>
+            <span class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13.5 8.5-5 5"/><path d="m8.5 8.5 5 5"/><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
             <p class="empty-title">没有找到相关日记</p>
             <p class="empty-desc">换个关键词试试，或者清空搜索看看全部日记</p>
             <button type="button" class="btn-clear" data-dom-id="clear-search">清空搜索</button>
@@ -697,15 +612,16 @@ body {
   .entry-card:hover { transform: none; }
 }
 </style>
-<script>lucide.createIcons();</script>
 <script>
 (function () {
   'use strict';
 
+  var STORAGE_KEY = 'timecapsule-entries';
   var list = document.getElementById('diary-list');
   var searchInput = document.getElementById('search-input');
   var searchHint = document.getElementById('search-hint');
   var emptyState = document.getElementById('search-empty-state');
+  var listEmptyState = document.getElementById('list-empty-state');
   var clearBtn = document.querySelector('[data-dom-id="clear-search"]');
   var segBtns = document.querySelectorAll('[data-dom-id="sort-control"] .seg-btn');
   var subtitle = document.getElementById('list-subtitle');
@@ -713,11 +629,164 @@ body {
   var toastTimer = null;
 
   var groups = [];
-  var groupEls = list ? list.querySelectorAll('.diary-group') : [];
+  var totalEntries = 0;
   var i;
-  for (i = 0; i < groupEls.length; i++) { groups.push(groupEls[i]); }
 
-  var totalEntries = list ? list.querySelectorAll('.entry-card').length : 0;
+  /* --- 示例日记（首次体验的演示内容，不写入 localStorage） --- */
+  var EXAMPLES = [
+    {
+      dateISO: '2026-08-05T07:42', weather: '晴',
+      title: '窗边的一杯热咖啡',
+      body: '<p>清晨六点半，窗外的梧桐叶还挂着露水。冲了一杯手冲咖啡，香气慢慢散开，忽然觉得日子也可以慢一点。</p>',
+      images: [{ src: '../assets/diary-coffee.jpg' }]
+    },
+    {
+      dateISO: '2026-08-05T19:15', weather: '多云',
+      title: '傍晚在公园散步',
+      body: '<p>下班后绕去公园走了两圈，晚风很轻。看见一个小男孩追着泡泡跑，笑得特别大声，原来快乐可以这么简单。</p>',
+      images: [{ src: '../assets/diary-park.jpg' }]
+    },
+    {
+      dateISO: '2026-08-04T23:02', weather: '阴',
+      title: '重读《小王子》',
+      body: '<p>睡前又翻了几页《小王子》，狐狸说的话依旧让人心里一暖。长大以后，才慢慢听懂这些温柔的道理。</p>',
+      images: [{ src: '../assets/diary-book.jpg' }]
+    },
+    {
+      dateISO: '2026-08-02T21:30', weather: '阵雨',
+      title: '给妈妈打了个电话',
+      body: '<p>周末给妈妈打了四十分钟的电话，聊家常也聊最近的烦恼。挂了电话之后，心里踏实了很多，这就是家人的力量吧。</p>',
+      images: []
+    }
+  ];
+
+  /* --- 天气图标映射（内联 SVG，零外网依赖） --- */
+  function weatherIcon(name) {
+    var svg = function (inner) {
+      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+    };
+    var map = {
+      '晴': svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>'),
+      '多云': svg('<path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>'),
+      '阴': svg('<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>'),
+      '小雨': svg('<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/>'),
+      '阵雨': svg('<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/>'),
+      '雷阵雨': svg('<path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/>'),
+      '雪': svg('<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M8 15h.01"/><path d="M8 19h.01"/><path d="M12 17h.01"/><path d="M12 21h.01"/><path d="M16 15h.01"/><path d="M16 19h.01"/>'),
+      '大风': svg('<path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/>'),
+      '雾': svg('<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 17H7"/><path d="M17 21H9"/>')
+    };
+    return map[name] || map['阴'];
+  }
+  var IMAGE_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>';
+  var CHEVRON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="entry-arrow" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+
+  /* --- 工具函数 --- */
+  function readEntries() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return Array.isArray(raw) ? raw : [];
+    } catch (err) { return []; }
+  }
+
+  function plainText(html) {
+    var div = document.createElement('div');
+    div.innerHTML = html || '';
+    return (div.textContent || '').trim();
+  }
+
+  function escapeAttr(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  var WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+  function groupTitle(dateStr) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr || '');
+    if (!m) { return dateStr || ''; }
+    var d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return m[1] + '年' + Number(m[2]) + '月' + Number(m[3]) + '日 · 星期' + WEEK[d.getDay()];
+  }
+
+  /* --- 渲染：示例日记 + 用户日记，按日期分组 --- */
+  function renderEntries() {
+    var saved = readEntries();
+    var all = EXAMPLES.concat(saved);
+    all.sort(function (a, b) {
+      return String(b.dateISO || '').localeCompare(String(a.dateISO || ''));
+    });
+
+    var groupMap = {};
+    var groupOrder = [];
+    all.forEach(function (e) {
+      var d = String(e.dateISO || '').slice(0, 10) || '未知日期';
+      if (!groupMap[d]) { groupMap[d] = []; groupOrder.push(d); }
+      groupMap[d].push(e);
+    });
+
+    list.innerHTML = '';
+    groupOrder.forEach(function (d) {
+      var g = document.createElement('section');
+      g.className = 'diary-group';
+      g.setAttribute('data-date', d);
+      var h = document.createElement('h2');
+      h.className = 'group-title';
+      h.textContent = groupTitle(d);
+      var cards = document.createElement('div');
+      cards.className = 'group-cards';
+      groupMap[d].forEach(function (e) {
+        cards.appendChild(buildCard(e));
+      });
+      g.appendChild(h);
+      g.appendChild(cards);
+      list.appendChild(g);
+    });
+
+    groups = [];
+    var groupEls = list.querySelectorAll('.diary-group');
+    for (var i = 0; i < groupEls.length; i++) { groups.push(groupEls[i]); }
+    totalEntries = list.querySelectorAll('.entry-card').length;
+
+    if (subtitle) {
+      subtitle.textContent = '共 ' + totalEntries + ' 篇日记 · 最新优先';
+    }
+    if (listEmptyState) {
+      listEmptyState.classList.toggle('is-hidden', totalEntries > 0);
+    }
+  }
+
+  function buildCard(e) {
+    var dateISO = String(e.dateISO || '');
+    var preview = plainText(e.body || '');
+    var firstImg = (e.images && e.images.length && e.images[0].src) ? e.images[0].src : '';
+
+    var html = '';
+    html += '<a class="entry-card ios-card-raised" href="diary-editor.html" data-dom-id="entry-open"';
+    html += ' data-date="' + escapeAttr(dateISO.slice(0, 10)) + '"';
+    html += ' data-title="' + escapeAttr(e.title || '') + '"';
+    html += ' data-preview="' + escapeAttr(preview) + '"';
+    html += ' data-key="' + escapeAttr(dateISO) + '">';
+    if (firstImg) {
+      html += '<div class="entry-thumb"><img src="' + escapeAttr(firstImg) + '" alt="' + escapeAttr(e.title || '') + '" loading="lazy"></div>';
+    }
+    html += '<div class="entry-body">';
+    html += '<h3 class="entry-title">' + escapeAttr(e.title || '') + '</h3>';
+    html += '<p class="entry-preview">' + escapeAttr(preview) + '</p>';
+    html += '<div class="entry-meta">';
+    if (dateISO.length >= 16) {
+      html += '<span class="meta-time">' + escapeAttr(dateISO.slice(11, 16)) + '</span>';
+    }
+    html += '<span class="meta-pill weather">' + weatherIcon(e.weather) + escapeAttr(e.weather || '') + '</span>';
+    if (firstImg) {
+      html += '<span class="meta-pill image">' + IMAGE_ICON + '含图</span>';
+    }
+    html += '</div></div>';
+    html += CHEVRON_ICON;
+    html += '</a>';
+
+    var wrap = document.createElement('div');
+    wrap.innerHTML = html;
+    return wrap.firstChild;
+  }
 
   function showToast(msg) {
     if (!toastEl) { return; }
@@ -728,6 +797,9 @@ body {
       toastEl.classList.remove('is-visible');
     }, 2200);
   }
+
+  /* --- 首次渲染：示例 + 本地保存的用户日记 --- */
+  renderEntries();
 
   /* --- 搜索：实时过滤标题 + 预览 --- */
   function applySearch(raw) {
@@ -824,11 +896,19 @@ body {
       if (e.metaKey || e.ctrlKey || e.shiftKey) { return; }
       e.preventDefault();
       try {
-        sessionStorage.setItem('timecapsule:opened-entry', JSON.stringify({
-          title: card.getAttribute('data-title') || '',
-          preview: card.getAttribute('data-preview') || '',
-          date: card.getAttribute('data-date') || ''
-        }));
+        var key = card.getAttribute('data-key') || '';
+        var payload = {};
+        if (key) {
+          /* 本地保存的日记：传唯一标识，编辑器按此完整恢复 */
+          payload = { dateISO: key };
+        } else {
+          payload = {
+            title: card.getAttribute('data-title') || '',
+            preview: card.getAttribute('data-preview') || '',
+            date: card.getAttribute('data-date') || ''
+          };
+        }
+        sessionStorage.setItem('timecapsule:opened-entry', JSON.stringify(payload));
       } catch (err) { /* ignore */ }
       window.location.href = card.getAttribute('href') || 'diary-editor.html';
     });

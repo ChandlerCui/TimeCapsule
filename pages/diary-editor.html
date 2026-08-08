@@ -132,33 +132,6 @@ body {
 }
 
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
-    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
-    <style type="text/tailwindcss">
-  @theme inline {
-    --color-background: var(--brand-background);
-    --color-foreground: var(--brand-foreground);
-    --color-card: var(--brand-card);
-    --color-card-foreground: var(--brand-card-foreground);
-    --color-popover: var(--brand-popover);
-    --color-popover-foreground: var(--brand-popover-foreground);
-    --color-primary: var(--brand-primary);
-    --color-primary-foreground: var(--brand-primary-foreground);
-    --color-muted: var(--brand-muted);
-    --color-muted-foreground: var(--brand-muted-foreground);
-    --color-border: var(--brand-border);
-    --color-input: var(--brand-input);
-    --color-ring: var(--brand-ring);
-    --radius-sm: var(--brand-radius-sm);
-    --radius-md: var(--brand-radius-md);
-    --radius-lg: var(--brand-radius-lg);
-  }
-  @layer base {
-    body { background: var(--brand-background); color: var(--brand-foreground); }
-    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
-    th { @apply whitespace-nowrap; }
-  }
-    </style>
     <style id="semantic-token-fallback">
       .bg-background { background-color: var(--brand-background); }
       .text-background { color: var(--brand-background); }
@@ -235,7 +208,7 @@ body {
     <header class="app-bar">
         <div class="app-bar-inner">
             <button type="button" class="app-bar-back" data-dom-id="back-list" aria-label="返回列表">
-                <i data-lucide="chevron-left"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
                 <span>返回</span>
             </button>
             <span class="app-bar-brand">TimeCapsule</span>
@@ -264,10 +237,10 @@ body {
             <input id="editor-title" class="editor-title" type="text" placeholder="标题" value="午后的手冲咖啡" aria-label="日记标题" autocomplete="off">
 
             <div class="format-toolbar" role="toolbar" aria-label="文本格式工具">
-                <button type="button" data-fmt="bold" title="加粗" aria-label="加粗"><i data-lucide="bold"></i></button>
-                <button type="button" data-fmt="italic" title="斜体" aria-label="斜体"><i data-lucide="italic"></i></button>
-                <button type="button" data-fmt="list" title="列表" aria-label="列表"><i data-lucide="list"></i></button>
-                <button type="button" data-fmt="image" title="插入图片" aria-label="插入图片"><i data-lucide="image"></i></button>
+                <button type="button" data-fmt="bold" title="加粗" aria-label="加粗"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+                <button type="button" data-fmt="italic" title="斜体" aria-label="斜体"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
+                <button type="button" data-fmt="list" title="列表" aria-label="列表"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg></button>
+                <button type="button" data-fmt="image" title="插入图片" aria-label="插入图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></button>
             </div>
 
             <div id="editor-body" class="editor-body" contenteditable="true" data-placeholder="写点什么吧…" aria-label="日记正文">午后把磨好的豆子倒进滤杯，热水缓缓注入，香气在空气里一点点漫开。生活里那些微小的仪式感，其实都是给自己的温柔。今天没有特别的安排，只想慢慢喝完这杯咖啡，把时间还给此刻。</div>
@@ -280,8 +253,8 @@ body {
                         <img src="../assets/diary-coffee.jpg" alt="午后的手冲咖啡">
                         <span class="image-hint">轻点图片编辑</span>
                         <div class="image-actions">
-                            <button type="button" class="image-action" data-dom-id="image-rotate" data-action="rotate" title="旋转" aria-label="旋转图片"><i data-lucide="rotate-cw"></i></button>
-                            <button type="button" class="image-action image-action-danger" data-dom-id="image-delete" data-action="delete" title="删除" aria-label="删除图片"><i data-lucide="trash-2"></i></button>
+                            <button type="button" class="image-action" data-dom-id="image-rotate" data-action="rotate" title="旋转" aria-label="旋转图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
+                            <button type="button" class="image-action image-action-danger" data-dom-id="image-delete" data-action="delete" title="删除" aria-label="删除图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
                         </div>
                     </div>
                     <input type="text" class="image-caption" placeholder="添加图片说明…" value="今天的第二杯手冲" aria-label="图片说明" autocomplete="off">
@@ -289,7 +262,7 @@ body {
             </div>
 
             <button type="button" class="insert-image" data-dom-id="insert-image" aria-label="添加图片">
-                <i data-lucide="image-plus"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 5h6"/><path d="M19 2v6"/><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/><circle cx="9" cy="9" r="2"/></svg>
                 <span class="insert-image-title">添加图片</span>
                 <span class="insert-image-note">支持 JPG / PNG，最多 9 张</span>
             </button>
@@ -535,6 +508,7 @@ body {
   max-height: 420px;
   object-fit: cover;
   border-radius: var(--brand-radius-lg);
+  cursor: zoom-in;
   transition: transform 0.3s ease;
 }
 .image-frame img.rotate-90 { transform: rotate(90deg); }
@@ -594,6 +568,50 @@ body {
   color: var(--brand-card);
   background: color-mix(in srgb, var(--brand-foreground) 38%, transparent);
   pointer-events: none;
+}
+
+/* --- 大图预览（lightbox） --- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.24s ease, visibility 0.24s ease;
+}
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 20, 30, 0.72); /* tokenRelaxation: 遮罩层 */
+}
+.lightbox-body {
+  position: relative;
+  max-width: 92vw;
+  max-height: 88vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.lightbox-body img {
+  max-width: 92vw;
+  max-height: 80vh;
+  border-radius: var(--brand-radius-lg);
+  box-shadow: var(--brand-shadow-float);
+  background: var(--brand-card);
+}
+.lightbox-body figcaption {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85); /* tokenRelaxation: 遮罩层上文字 */
 }
 
 /* --- 图片说明输入 --- */
@@ -765,7 +783,9 @@ body {
   var now = new Date();
   var WEEK = ['日', '一', '二', '三', '四', '五', '六'];
   var dateLabel = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 星期' + WEEK[now.getDay()];
-  var dateISO = now.toISOString();
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+  /* 本地时间格式（与列表页分组一致）：YYYY-MM-DDTHH:mm */
+  var dateISO = now.getFullYear() + '-' + pad2(now.getMonth() + 1) + '-' + pad2(now.getDate()) + 'T' + pad2(now.getHours()) + ':' + pad2(now.getMinutes());
 
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
@@ -801,17 +821,52 @@ body {
     }, 2000);
   }
 
-  /* --- 预填：?new=1 → 空白编辑器；列表带入 → 带入标题与正文；否则示例预填 --- */
+  /* --- 预填：?new=1 → 空白编辑器；点击列表日记 → 完整恢复；示例 → 标题正文 --- */
   var isNew = new URLSearchParams(window.location.search).get('new') === '1';
   var opened = null;
   try {
     opened = JSON.parse(sessionStorage.getItem('timecapsule:opened-entry') || 'null');
   } catch (err) { opened = null; }
 
+  function readEntries() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return Array.isArray(raw) ? raw : [];
+    } catch (err) { return []; }
+  }
+
   if (isNew) {
     titleInput.value = '';
     bodyEditable.innerHTML = '';
     imageCards.innerHTML = '';
+  } else if (opened && opened.dateISO) {
+    /* 点击列表中的本地日记：按唯一标识完整恢复 */
+    var full = null;
+    var savedList = readEntries();
+    for (var si = 0; si < savedList.length; si++) {
+      if (savedList[si] && savedList[si].dateISO === opened.dateISO) { full = savedList[si]; break; }
+    }
+    if (full) {
+      titleInput.value = full.title || '';
+      bodyEditable.innerHTML = full.body || '';
+      if (full.weather) {
+        weatherBtns.forEach(function (b) {
+          b.classList.remove('seg-active');
+          b.setAttribute('aria-checked', 'false');
+          if (b.getAttribute('data-weather') === full.weather) {
+            b.classList.add('seg-active');
+            b.setAttribute('aria-checked', 'true');
+            weatherLabel = full.weather;
+          }
+        });
+      }
+      (full.images || []).forEach(function (im) {
+        if (im && im.src) {
+          imageCards.appendChild(createImageCard(im.src, im.caption || '', im.rotate || 0));
+        }
+      });
+      if (typeof lucide !== 'undefined' && lucide.createIcons) { lucide.createIcons(); }
+    }
   } else if (opened && opened.title) {
     titleInput.value = opened.title || '';
     bodyEditable.innerHTML = opened.preview || '';
@@ -848,24 +903,46 @@ body {
     });
   });
 
-  /* --- 图片：FileReader 转 dataURL / 构建图片卡片 --- */
-  function readFile(file, cb) {
+  /* --- 图片：压缩后转 dataURL（最长边 1280px / JPEG 0.8），避免撑爆 localStorage --- */
+  var MAX_EDGE = 1280;
+  function compressImage(file, cb) {
     var reader = new FileReader();
-    reader.onload = function () { cb(reader.result); };
+    reader.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var scale = Math.min(1, MAX_EDGE / Math.max(img.width, img.height));
+          var w = Math.max(1, Math.round(img.width * scale));
+          var h = Math.max(1, Math.round(img.height * scale));
+          var canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff'; /* 透明 PNG 转白底，避免 JPEG 黑底 */
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          cb(canvas.toDataURL('image/jpeg', 0.8));
+        } catch (err) {
+          cb(reader.result); /* 压缩失败退回原图 */
+        }
+      };
+      img.onerror = function () { cb(reader.result); };
+      img.src = reader.result;
+    };
     reader.readAsDataURL(file);
   }
 
-  function createImageCard(src, caption) {
+  function createImageCard(src, caption, rotate) {
     var fig = document.createElement('figure');
     fig.className = 'image-card';
-    fig.setAttribute('data-rotate', '0');
+    fig.setAttribute('data-rotate', String(rotate || 0));
     fig.innerHTML =
       '<div class="image-frame">' +
-        '<img src="' + src + '" alt="日记图片">' +
-        '<span class="image-hint">轻点图片编辑</span>' +
+        '<img src="' + src + '" alt="日记图片" tabindex="0">' +
+        '<span class="image-hint">轻点图片预览 · 可旋转删除</span>' +
         '<div class="image-actions">' +
-          '<button type="button" class="image-action" data-dom-id="image-rotate" data-action="rotate" title="旋转" aria-label="旋转图片"><i data-lucide="rotate-cw"></i></button>' +
-          '<button type="button" class="image-action image-action-danger" data-dom-id="image-delete" data-action="delete" title="删除" aria-label="删除图片"><i data-lucide="trash-2"></i></button>' +
+          '<button type="button" class="image-action" data-dom-id="image-rotate" data-action="rotate" title="旋转" aria-label="旋转图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>' +
+          '<button type="button" class="image-action image-action-danger" data-dom-id="image-delete" data-action="delete" title="删除" aria-label="删除图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>' +
         '</div>' +
       '</div>' +
       '<input type="text" class="image-caption" placeholder="添加图片说明…" aria-label="图片说明" autocomplete="off">';
@@ -873,7 +950,19 @@ body {
       var cap = fig.querySelector('.image-caption');
       if (cap) { cap.value = caption; }
     }
+    applyRotate(fig, parseInt(fig.getAttribute('data-rotate') || '0', 10));
     return fig;
+  }
+
+  /* --- 应用旋转角度到图片（0/90/180/270） --- */
+  function applyRotate(card, step) {
+    var img = card.querySelector('.image-frame img');
+    if (!img) { return; }
+    card.setAttribute('data-rotate', String(step % 4));
+    img.classList.remove('rotate-90', 'rotate-180', 'rotate-270');
+    if (step % 4 === 1) { img.classList.add('rotate-90'); }
+    else if (step % 4 === 2) { img.classList.add('rotate-180'); }
+    else if (step % 4 === 3) { img.classList.add('rotate-270'); }
   }
 
   function cardCount() { return imageCards.querySelectorAll('.image-card').length; }
@@ -889,7 +978,7 @@ body {
     var files = Array.prototype.slice.call(imageInput.files || []);
     if (!files.length) { return; }
     if (pendingInsert === 'inline') {
-      readFile(files[0], function (dataUrl) {
+      compressImage(files[0], function (dataUrl) {
         bodyEditable.focus();
         document.execCommand('insertImage', false, dataUrl);
         showToast('已插入图片');
@@ -899,9 +988,8 @@ body {
       var toAdd = files.slice(0, room);
       var left = files.length - toAdd.length;
       toAdd.forEach(function (file, idx) {
-        readFile(file, function (dataUrl) {
+        compressImage(file, function (dataUrl) {
           imageCards.appendChild(createImageCard(dataUrl, ''));
-          if (typeof lucide !== 'undefined' && lucide.createIcons) { lucide.createIcons(); }
           if (idx === toAdd.length - 1 && left > 0) { showToast('最多 9 张图片，已忽略多余图片'); }
         });
       });
@@ -910,42 +998,66 @@ body {
     imageInput.value = '';
   });
 
-  /* --- 图片卡片：旋转 90° / 删除（事件委托） --- */
+  /* --- 图片卡片：旋转 90° / 删除 / 点击预览（事件委托） --- */
   imageCards.addEventListener('click', function (e) {
     var btn = e.target && e.target.closest ? e.target.closest('[data-action]') : null;
-    if (!btn || !imageCards.contains(btn)) { return; }
-    var card = btn.closest('.image-card');
-    if (!card) { return; }
-    var img = card.querySelector('.image-frame img');
-    if (!img) { return; }
-    if (btn.getAttribute('data-action') === 'rotate') {
-      var step = (parseInt(card.getAttribute('data-rotate') || '0', 10) + 1) % 4;
-      card.setAttribute('data-rotate', String(step));
-      img.classList.remove('rotate-90', 'rotate-180', 'rotate-270');
-      if (step === 1) { img.classList.add('rotate-90'); }
-      else if (step === 2) { img.classList.add('rotate-180'); }
-      else if (step === 3) { img.classList.add('rotate-270'); }
-    } else if (btn.getAttribute('data-action') === 'delete') {
-      card.remove();
-      showToast('已删除图片');
+    if (btn && imageCards.contains(btn)) {
+      var card = btn.closest('.image-card');
+      if (!card) { return; }
+      if (btn.getAttribute('data-action') === 'rotate') {
+        var step = (parseInt(card.getAttribute('data-rotate') || '0', 10) + 1) % 4;
+        applyRotate(card, step);
+      } else if (btn.getAttribute('data-action') === 'delete') {
+        card.remove();
+        showToast('已删除图片');
+      }
+      return;
+    }
+    /* 点击图片本体 → 打开大图预览 */
+    var img = e.target && e.target.closest ? e.target.closest('.image-frame img') : null;
+    if (img && imageCards.contains(img)) {
+      openLightbox(img.getAttribute('src'));
     }
   });
 
-  /* --- 保存：标题 / 正文 / 天气 / 图片 / 日期 → localStorage --- */
-  function readEntries() {
-    try {
-      var raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      return Array.isArray(raw) ? raw : [];
-    } catch (err) { return []; }
+  /* --- 大图预览（lightbox） --- */
+  var lightboxEl = null;
+  function openLightbox(src) {
+    if (!src) { return; }
+    if (!lightboxEl) {
+      lightboxEl = document.createElement('div');
+      lightboxEl.className = 'lightbox';
+      lightboxEl.innerHTML =
+        '<div class="lightbox-backdrop"></div>' +
+        '<figure class="lightbox-body">' +
+          '<img src="" alt="图片预览">' +
+          '<figcaption>点击任意处关闭</figcaption>' +
+        '</figure>';
+      document.body.appendChild(lightboxEl);
+      lightboxEl.addEventListener('click', closeLightbox);
+      lightboxEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closeLightbox(); }
+      });
+    }
+    lightboxEl.querySelector('img').src = src;
+    lightboxEl.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    if (!lightboxEl) { return; }
+    lightboxEl.classList.remove('is-open');
+    document.body.style.overflow = '';
   }
 
+  /* --- 保存：标题 / 正文 / 天气 / 图片 / 日期 → localStorage（readEntries 见上方预填段） --- */
   function collectEntry() {
     var images = $$('.image-card', imageCards).map(function (card) {
       var img = card.querySelector('.image-frame img');
       var cap = card.querySelector('.image-caption');
       return {
         src: img ? img.getAttribute('src') : '',
-        caption: cap ? cap.value : ''
+        caption: cap ? cap.value : '',
+        rotate: parseInt(card.getAttribute('data-rotate') || '0', 10)
       };
     });
     return {
@@ -970,7 +1082,11 @@ body {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       showToast('已保存');
     } catch (err) {
-      showToast('保存失败：本地存储空间不足');
+      if (err && (err.name === 'QuotaExceededError' || err.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
+        showToast('保存失败：图片太多，请删减几张图片后重试');
+      } else {
+        showToast('保存失败，请重试');
+      }
     }
   }
 
@@ -993,6 +1109,5 @@ body {
   });
 })();
 </script>
-<script>lucide.createIcons();</script>
 </body>
 </html>
