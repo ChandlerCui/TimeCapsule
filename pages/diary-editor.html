@@ -780,12 +780,22 @@ body {
 
   /* --- 常量与 DOM 引用 --- */
   var STORAGE_KEY = 'timecapsule-entries';
-  var now = new Date();
   var WEEK = ['日', '一', '二', '三', '四', '五', '六'];
-  var dateLabel = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 星期' + WEEK[now.getDay()];
   function pad2(n) { return n < 10 ? '0' + n : '' + n; }
   /* 本地时间格式（与列表页分组一致）：YYYY-MM-DDTHH:mm */
-  var dateISO = now.getFullYear() + '-' + pad2(now.getMonth() + 1) + '-' + pad2(now.getDate()) + 'T' + pad2(now.getHours()) + ':' + pad2(now.getMinutes());
+  function makeNowISO() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + 'T' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+  }
+  function makeLabel(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
+    if (!m) { return ''; }
+    var d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return m[1] + '年' + Number(m[2]) + '月' + Number(m[3]) + '日 星期' + WEEK[d.getDay()];
+  }
+  /* 当前编辑日记的唯一标识：新日记用当前时间，编辑已存日记时用日记自身的时间 */
+  var dateISO = null;
+  var dateLabel = '';
 
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
@@ -807,8 +817,6 @@ body {
   var weatherLabel = '晴';
   var pendingInsert = 'cards';
   var toastTimer = null;
-
-  if (dateEl) { dateEl.textContent = dateLabel; }
 
   /* --- Toast --- */
   function showToast(msg) {
@@ -847,6 +855,9 @@ body {
       if (savedList[si] && savedList[si].dateISO === opened.dateISO) { full = savedList[si]; break; }
     }
     if (full) {
+      /* 使用日记自身的时间作为唯一标识：保存=更新本条，删除=精确删除本条 */
+      dateISO = full.dateISO;
+      dateLabel = makeLabel(dateISO);
       titleInput.value = full.title || '';
       bodyEditable.innerHTML = full.body || '';
       if (full.weather) {
@@ -871,6 +882,11 @@ body {
     titleInput.value = opened.title || '';
     bodyEditable.innerHTML = opened.preview || '';
   }
+
+  /* --- 新日记：使用当前时间；并刷新顶部日期显示 --- */
+  if (!dateISO) { dateISO = makeNowISO(); }
+  if (!dateLabel) { dateLabel = makeLabel(dateISO); }
+  if (dateEl) { dateEl.textContent = dateLabel; }
 
   /* --- 天气分段控件 --- */
   weatherBtns.forEach(function (btn) {
