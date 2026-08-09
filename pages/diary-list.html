@@ -3,207 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TimeCapsule · 日记列表</title>
-    <style id="theme-vars">
-/* ============================================================
-   TimeCapsule · iOS 简约风格主题
-   主色：iOS 系统蓝 (#0A84FF) | 基底：白 + 浅蓝灰
-   ============================================================ */
-
-:root {
-  /* --- 语义化 Token（apply-html-head-contract 必需映射集） --- */
-  --brand-background: #f4f7fc;
-  --brand-foreground: #1b1e25;
-  --brand-card: #ffffff;
-  --brand-card-foreground: #1b1e25;
-  --brand-popover: #ffffff;
-  --brand-popover-foreground: #1b1e25;
-  --brand-primary: #0a84ff;
-  --brand-primary-foreground: #ffffff;
-  --brand-muted: #eaf1fa;
-  --brand-muted-foreground: #64748b;
-  --brand-border: #e4eaf3;
-  --brand-input: #e4eaf3;
-  --brand-ring: #0a84ff;
-  --brand-radius-sm: 8px;
-  --brand-radius-md: 12px;
-  --brand-radius-lg: 16px;
-
-  /* --- 扩展的 iOS 浅色阶（同一主色相的明暗步进） --- */
-  --brand-ink-2: #7a828f;
-  --brand-ink-3: #a7afbc;
-  --brand-primary-hover: #0071e3;
-  --brand-primary-soft: #e9f3ff;
-  --brand-primary-soft-2: #d9ecff;
-  --brand-seg: #f0f4fa;
-  --brand-divider: #edf1f7;
-
-  /* --- 深度 --- */
-  --brand-shadow-card: 0 1px 2px rgba(23, 34, 58, 0.05), 0 1px 3px rgba(23, 34, 58, 0.04);
-  --brand-shadow-float: 0 12px 32px -12px rgba(23, 34, 58, 0.16);
-
-  /* --- 字体 --- */
-  --brand-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
-    "Helvetica Neue", "Microsoft YaHei", "Segoe UI", sans-serif;
-}
-
-/* --- 基底 --- */
-html,
-body {
-  font-family: var(--brand-font-sans);
-  background-color: var(--brand-background);
-  color: var(--brand-foreground);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-::selection {
-  background-color: var(--brand-primary-soft-2);
-  color: var(--brand-foreground);
-}
-
-/* --- 细滚动条（iOS 观感） --- */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--brand-divider) transparent;
-}
-*::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-*::-webkit-scrollbar-thumb {
-  background-color: var(--brand-divider);
-  border-radius: 999px;
-}
-
-/* --- 工具类：次级文字 --- */
-.t-ink-2 {
-  color: var(--brand-ink-2);
-}
-.t-ink-3 {
-  color: var(--brand-ink-3);
-}
-
-/* --- 工具类：浅蓝填充 / 描边 --- */
-.bg-primary-soft {
-  background-color: var(--brand-primary-soft);
-}
-.bg-primary-soft-2 {
-  background-color: var(--brand-primary-soft-2);
-}
-.bg-seg {
-  background-color: var(--brand-seg);
-}
-
-/* --- 工具类：分隔线 --- */
-.divider-h {
-  height: 1px;
-  background-color: var(--brand-divider);
-  border: 0;
-}
-
-/* --- iOS 卡片 --- */
-.ios-card {
-  background-color: var(--brand-card);
-  border: 1px solid var(--brand-border);
-  border-radius: var(--brand-radius-lg);
-}
-.ios-card-raised {
-  background-color: var(--brand-card);
-  border: 1px solid var(--brand-border);
-  border-radius: var(--brand-radius-lg);
-  box-shadow: var(--brand-shadow-card);
-}
-
-/* --- 浮动层阴影（仅弹层使用） --- */
-.shadow-float {
-  box-shadow: var(--brand-shadow-float);
-}
-
-/* --- 减少动效 --- */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-    </style>
-    <style id="semantic-token-fallback">
-      .bg-background { background-color: var(--brand-background); }
-      .text-background { color: var(--brand-background); }
-      .border-background { border-color: var(--brand-background); }
-      .ring-background { --tw-ring-color: var(--brand-background); }
-      .bg-foreground { background-color: var(--brand-foreground); }
-      .text-foreground { color: var(--brand-foreground); }
-      .border-foreground { border-color: var(--brand-foreground); }
-      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
-      .bg-card { background-color: var(--brand-card); }
-      .text-card { color: var(--brand-card); }
-      .border-card { border-color: var(--brand-card); }
-      .ring-card { --tw-ring-color: var(--brand-card); }
-      .bg-card-foreground { background-color: var(--brand-card-foreground); }
-      .text-card-foreground { color: var(--brand-card-foreground); }
-      .border-card-foreground { border-color: var(--brand-card-foreground); }
-      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
-      .bg-popover { background-color: var(--brand-popover); }
-      .text-popover { color: var(--brand-popover); }
-      .border-popover { border-color: var(--brand-popover); }
-      .ring-popover { --tw-ring-color: var(--brand-popover); }
-      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
-      .text-popover-foreground { color: var(--brand-popover-foreground); }
-      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
-      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
-      .bg-primary { background-color: var(--brand-primary); }
-      .text-primary { color: var(--brand-primary); }
-      .border-primary { border-color: var(--brand-primary); }
-      .ring-primary { --tw-ring-color: var(--brand-primary); }
-      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
-      .text-primary-foreground { color: var(--brand-primary-foreground); }
-      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
-      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
-      .bg-muted { background-color: var(--brand-muted); }
-      .text-muted { color: var(--brand-muted); }
-      .border-muted { border-color: var(--brand-muted); }
-      .ring-muted { --tw-ring-color: var(--brand-muted); }
-      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
-      .text-muted-foreground { color: var(--brand-muted-foreground); }
-      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
-      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
-      .bg-border { background-color: var(--brand-border); }
-      .text-border { color: var(--brand-border); }
-      .border-border { border-color: var(--brand-border); }
-      .ring-border { --tw-ring-color: var(--brand-border); }
-      .bg-input { background-color: var(--brand-input); }
-      .text-input { color: var(--brand-input); }
-      .border-input { border-color: var(--brand-input); }
-      .ring-input { --tw-ring-color: var(--brand-input); }
-      .bg-ring { background-color: var(--brand-ring); }
-      .text-ring { color: var(--brand-ring); }
-      .border-ring { border-color: var(--brand-ring); }
-      .ring-ring { --tw-ring-color: var(--brand-ring); }
-    </style>
+    <title>TimeCapsule · 日记</title>
+    <link rel="stylesheet" href="../css/theme.css">
     <style>
-      .no-scrollbar::-webkit-scrollbar { display: none; }
-      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      [data-icon] {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        -webkit-mask-size: contain;
-        mask-size: contain;
-        -webkit-mask-repeat: no-repeat;
-        mask-repeat: no-repeat;
-        -webkit-mask-position: center;
-        mask-position: center;
-        background-color: currentColor;
+      /* --- 顶部应用栏 --- */
+      .app-bar {
+        position: sticky; top: 0; z-index: 50;
+        background: color-mix(in srgb, var(--brand-card) 85%, transparent);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        border-bottom: 1px solid var(--brand-border);
+      }
+      .app-bar-inner {
+        max-width: 980px; margin: 0 auto; padding: 0 24px; height: 60px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--brand-foreground); }
+      .brand-badge {
+        display: flex; align-items: center; justify-content: center;
+        width: 34px; height: 34px; border-radius: 10px;
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent-blue));
+        color: #fff; box-shadow: var(--brand-shadow-card);
+      }
+      .brand-badge svg { width: 18px; height: 18px; }
+      .brand-name { font-size: 17px; font-weight: 600; letter-spacing: 0.01em; }
+      .btn-new {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 18px; border-radius: 999px;
+        background: var(--brand-primary); color: #fff;
+        font-size: 14px; font-weight: 600; line-height: 1.2; text-decoration: none;
+        box-shadow: var(--brand-shadow-card);
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .btn-new:hover { background: var(--brand-primary-hover); }
+      .btn-new:active { transform: scale(0.96); }
+      .btn-new svg { width: 16px; height: 16px; }
+
+      /* --- 内容壳 --- */
+      .shell { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+      /* --- 页面标题 --- */
+      .page-head { display: flex; flex-direction: column; gap: 6px; margin: 28px 0 20px; }
+      .page-title { font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
+      .page-sub { font-size: 14px; color: var(--brand-ink-2); }
+
+      /* --- 工具条 --- */
+      .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+      .search-box {
+        flex: 1; display: flex; align-items: center; gap: 8px;
+        height: 42px; padding: 0 14px;
+        background: var(--brand-card); border: 1px solid var(--brand-border);
+        border-radius: var(--brand-radius-md);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .search-box:hover { border-color: var(--brand-primary-soft-2); }
+      .search-box:focus-within { border-color: var(--brand-primary); box-shadow: 0 0 0 3px var(--brand-primary-soft); }
+      .search-box svg { width: 16px; height: 16px; color: var(--brand-ink-3); flex-shrink: 0; }
+      .search-box:focus-within svg { color: var(--brand-primary); }
+      .search-box input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font-size: 14px; color: var(--brand-foreground); }
+      .search-box input::placeholder { color: var(--brand-ink-3); }
+      .search-box input::-webkit-search-cancel-button { -webkit-appearance: none; }
+      .search-hint { font-size: 13px; color: var(--brand-ink-2); margin: 0 0 14px; }
+
+      /* --- 排序分段 --- */
+      .seg { display: inline-flex; align-items: center; background: var(--brand-seg); border-radius: 999px; padding: 3px; }
+      .seg-btn {
+        border: 0; background: transparent; padding: 7px 16px; border-radius: 999px;
+        font-size: 13px; font-weight: 500; line-height: 1.2; color: var(--brand-ink-2);
+        cursor: pointer; transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      }
+      .seg-btn:hover { color: var(--brand-foreground); }
+      .seg-btn:active { transform: scale(0.96); }
+      .seg-btn.is-active { background: var(--brand-card); color: var(--brand-primary); font-weight: 600; box-shadow: var(--brand-shadow-card); }
+
+      /* --- 日记分组 --- */
+      .diary-group { margin-bottom: 24px; }
+      .group-title {
+        display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+        font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--brand-ink-2);
+      }
+      .group-title::before { content: ""; width: 3px; height: 14px; border-radius: 999px; background: var(--brand-primary); }
+      .group-cards { display: flex; flex-direction: column; gap: 12px; }
+
+      /* --- 日记卡片 --- */
+      .entry-card {
+        position: relative; display: flex; align-items: center; gap: 14px;
+        padding: 14px; text-decoration: none; color: inherit;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+      .entry-card:hover { transform: translateY(-2px); border-color: var(--brand-primary-soft-2); box-shadow: var(--brand-shadow-soft); }
+      .entry-card:active { transform: translateY(0); }
+      .entry-thumb {
+        flex-shrink: 0; width: 88px; height: 88px;
+        border-radius: var(--brand-radius-md); overflow: hidden; background: var(--brand-muted);
+      }
+      .entry-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .entry-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+      .entry-title { font-size: 16px; font-weight: 600; line-height: 1.4; color: var(--brand-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .entry-preview { font-size: 14px; line-height: 1.6; color: var(--brand-ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .entry-meta { margin-top: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--brand-ink-2); }
+      .meta-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 12px; line-height: 1.6; }
+      .meta-pill svg { width: 12px; height: 12px; }
+      .meta-pill.weather { background: var(--brand-primary-soft); color: var(--brand-primary); }
+      .meta-pill.mood { background: var(--brand-accent-blue-soft); color: var(--brand-accent-blue); }
+      .meta-pill.image { background: var(--brand-seg); color: var(--brand-ink-2); }
+      .meta-pill.audio { background: var(--brand-accent-blue-soft); color: var(--brand-accent-blue); }
+      .entry-arrow { flex-shrink: 0; display: flex; align-items: center; color: var(--brand-ink-3); }
+      .entry-arrow svg { width: 18px; height: 18px; }
+
+      /* --- 卡片删除按钮 --- */
+      .entry-delete {
+        position: absolute; top: 10px; right: 10px; z-index: 2;
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; padding: 0;
+        border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); color: var(--brand-ink-2);
+        cursor: pointer; opacity: 0;
+        transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+      }
+      .entry-card:hover .entry-delete { opacity: 1; }
+      .entry-delete:hover { background: rgba(229, 57, 53, 0.08); color: rgba(229, 57, 53, 1); border-color: rgba(229, 57, 53, 0.35); }
+      .entry-delete svg { width: 15px; height: 15px; }
+
+      /* --- 空状态 --- */
+      .empty-state {
+        display: flex; flex-direction: column; align-items: center; gap: 8px;
+        padding: 48px 24px; text-align: center;
+        background: var(--brand-card); border: 1px dashed var(--brand-border); border-radius: var(--brand-radius-lg);
+      }
+      .empty-icon { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 999px; background: var(--brand-primary-soft); color: var(--brand-primary); margin-bottom: 6px; }
+      .empty-icon svg { width: 26px; height: 26px; }
+      .empty-title { font-size: 16px; font-weight: 600; line-height: 1.4; }
+      .empty-desc { font-size: 13px; color: var(--brand-ink-2); }
+      .btn-clear { margin-top: 6px; padding: 8px 18px; border: 0; border-radius: 999px; background: var(--brand-primary); color: #fff; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.3s ease, transform 0.2s ease; }
+      .btn-clear:hover { background: var(--brand-primary-hover); }
+
+      /* --- 页脚 --- */
+      .page-footer { margin-top: 40px; padding: 20px 0 8px; border-top: 1px solid var(--brand-border); text-align: center; }
+      .page-footer p { font-size: 13px; color: var(--brand-ink-3); }
+
+      /* --- 响应式 --- */
+      @media (max-width: 767.98px) {
+        .app-bar-inner { padding: 0 16px; }
+        .shell { padding: 0 16px 100px; }
+        .page-title { font-size: 26px; }
+        .page-head { margin: 22px 0 16px; }
+        .toolbar { flex-direction: column; align-items: stretch; }
+        .seg { align-self: flex-start; }
+        .entry-thumb { width: 68px; height: 68px; }
+        .entry-card { padding: 12px; gap: 12px; }
+        .entry-delete { opacity: 1; top: 8px; right: 8px; width: 28px; height: 28px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .entry-card, .btn-new, .seg-btn, .btn-clear, .search-box { transition: none; }
+        .entry-card:hover { transform: none; }
       }
     </style>
 </head>
-<body class="min-h-screen font-sans antialiased">
+<body>
 <main>
     <header class="app-bar">
         <div class="app-bar-inner">
@@ -211,7 +169,7 @@ body {
                 <span class="brand-badge"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
                 <span class="brand-name">TimeCapsule</span>
             </a>
-            <a href="diary-editor.html?new=1" class="btn-new" data-dom-id="new-entry">
+            <a href="diary-editor.html?new=1" class="btn-new">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                 <span>写日记</span>
             </a>
@@ -221,15 +179,15 @@ body {
     <div class="shell">
         <section class="page-head">
             <h1 class="page-title">我的日记</h1>
-            <p class="page-sub" id="list-subtitle">共 4 篇日记 · 最新优先</p>
+            <p class="page-sub" id="list-subtitle">共 0 篇日记 · 最新优先</p>
         </section>
 
         <section class="toolbar" aria-label="搜索与排序">
             <div class="search-box">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-                <input id="search-input" data-dom-id="search-input" type="search" placeholder="搜索日记内容…" autocomplete="off" aria-label="搜索日记内容">
+                <input id="search-input" type="search" placeholder="搜索日记内容…" autocomplete="off" aria-label="搜索日记内容">
             </div>
-            <div class="seg" data-dom-id="sort-control" role="group" aria-label="排序方式">
+            <div class="seg" id="sort-control" role="group" aria-label="排序方式">
                 <button type="button" class="seg-btn is-active" data-order="desc">最新优先</button>
                 <button type="button" class="seg-btn" data-order="asc">最早优先</button>
             </div>
@@ -237,9 +195,7 @@ body {
 
         <p id="search-hint" class="search-hint is-hidden" aria-live="polite"></p>
 
-        <section id="diary-list" class="diary-list" aria-label="日记列表">
-            <!-- 日记由脚本动态渲染：示例日记 + 本地保存的用户日记 -->
-        </section>
+        <section id="diary-list" class="diary-list" aria-label="日记列表"></section>
 
         <div id="list-empty-state" class="empty-state is-hidden" role="status">
             <span class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
@@ -251,7 +207,7 @@ body {
             <span class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13.5 8.5-5 5"/><path d="m8.5 8.5 5 5"/><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
             <p class="empty-title">没有找到相关日记</p>
             <p class="empty-desc">换个关键词试试，或者清空搜索看看全部日记</p>
-            <button type="button" class="btn-clear" data-dom-id="clear-search">清空搜索</button>
+            <button type="button" class="btn-clear" id="clear-search">清空搜索</button>
         </div>
 
         <footer class="page-footer">
@@ -259,499 +215,35 @@ body {
         </footer>
     </div>
 
-    <div id="toast" class="toast is-hidden" role="status" aria-live="polite"></div>
+    <div id="tab-bar-mount"></div>
 </main>
-<style id="critical-layout">
-/* ============================================================
-   本页布局（iOS 简约：白卡 + 浅蓝灰底 + 系统蓝强调）
-   ============================================================ */
-.is-hidden { display: none !important; }
-[data-hidden="true"] { display: none !important; }
-
-/* --- 顶部应用栏：sticky 毛玻璃 --- */
-.app-bar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: rgba(255, 255, 255, 0.85);
-  background: color-mix(in srgb, var(--brand-card) 82%, transparent);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  backdrop-filter: blur(18px) saturate(180%);
-  border-bottom: 1px solid var(--brand-border);
-}
-.app-bar-inner {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--brand-foreground);
-}
-.brand-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: var(--brand-primary);
-  color: var(--brand-primary-foreground);
-  box-shadow: var(--brand-shadow-card);
-}
-.brand-badge svg.lucide { width: 18px; height: 18px; }
-.brand-name { font-size: 17px; font-weight: 600; letter-spacing: 0.01em; }
-.btn-new {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  background: var(--brand-primary);
-  color: var(--brand-primary-foreground);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.2;
-  text-decoration: none;
-  box-shadow: var(--brand-shadow-card);
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-.btn-new:hover { background: var(--brand-primary-hover); }
-.btn-new:active { transform: scale(0.97); }
-.btn-new:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
-.btn-new svg.lucide { width: 16px; height: 16px; }
-
-/* --- 内容壳：max-width 980 居中 --- */
-.shell {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 0 24px 64px;
-}
-
-/* --- 页面标题区 --- */
-.page-head {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 30px 0 20px;
-}
-.page-title {
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-.page-sub { font-size: 14px; color: var(--brand-ink-2); }
-
-/* --- 工具条：搜索 + 排序 --- */
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-.search-box {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 42px;
-  padding: 0 14px;
-  background: var(--brand-card);
-  border: 1px solid var(--brand-border);
-  border-radius: var(--brand-radius-md);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.search-box:hover { border-color: var(--brand-primary-soft-2); }
-.search-box:focus-within {
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px var(--brand-primary-soft);
-}
-.search-box svg.lucide { width: 16px; height: 16px; color: var(--brand-ink-3); flex-shrink: 0; }
-.search-box:focus-within svg.lucide { color: var(--brand-primary); }
-.search-box input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  outline: none;
-  background: transparent;
-  font-size: 14px;
-  color: var(--brand-foreground);
-}
-.search-box input::placeholder { color: var(--brand-ink-3); }
-.search-box input::-webkit-search-cancel-button { -webkit-appearance: none; }
-.search-hint { font-size: 13px; color: var(--brand-ink-2); margin: 0 0 14px; }
-
-/* --- 排序分段控件 --- */
-.seg {
-  display: inline-flex;
-  align-items: center;
-  background: var(--brand-seg);
-  border-radius: 999px;
-  padding: 3px;
-}
-.seg-btn {
-  border: 0;
-  background: transparent;
-  padding: 7px 16px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.2;
-  color: var(--brand-ink-2);
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
-}
-.seg-btn:hover { color: var(--brand-foreground); }
-.seg-btn:active { transform: scale(0.97); }
-.seg-btn:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
-.seg-btn.is-active {
-  background: var(--brand-primary-soft);
-  color: var(--brand-primary);
-  font-weight: 600;
-}
-
-/* --- 日记分组 --- */
-.diary-group { margin-bottom: 28px; }
-.group-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--brand-ink-2);
-}
-.group-title::before {
-  content: "";
-  width: 3px;
-  height: 14px;
-  border-radius: 999px;
-  background: var(--brand-primary);
-}
-.group-cards { display: flex; flex-direction: column; gap: 12px; }
-
-/* --- 日记卡片 --- */
-.entry-card {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-.entry-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--brand-primary-soft-2);
-  box-shadow: var(--brand-shadow-float);
-}
-.entry-card:active { transform: translateY(-1px); }
-.entry-card:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
-.entry-thumb {
-  flex-shrink: 0;
-  width: 96px;
-  height: 96px;
-  border-radius: var(--brand-radius-md);
-  overflow: hidden;
-  background: var(--brand-muted);
-}
-.entry-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.entry-body {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.entry-title {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--brand-foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.entry-preview {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--brand-ink-2);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.entry-meta {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: var(--brand-ink-2);
-}
-.meta-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  line-height: 1.6;
-}
-.meta-pill svg.lucide { width: 12px; height: 12px; }
-.meta-pill.weather { background: var(--brand-primary-soft); color: var(--brand-primary); }
-.meta-pill.image { background: var(--brand-seg); color: var(--brand-ink-2); }
-.entry-arrow {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  color: var(--brand-ink-3);
-}
-.entry-arrow svg.lucide { width: 18px; height: 18px; }
-
-/* --- 卡片内删除按钮（仅用户日记显示） --- */
-.entry-delete {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 1px solid var(--brand-border);
-  border-radius: 999px;
-  background: var(--brand-card);
-  color: var(--brand-ink-2);
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
-}
-.entry-card:hover .entry-delete { opacity: 1; }
-.entry-delete:hover {
-  background: rgba(229, 57, 53, 0.08); /* tokenRelaxation: 危险操作红 */
-  color: rgba(229, 57, 53, 1); /* tokenRelaxation */
-  border-color: rgba(229, 57, 53, 0.35); /* tokenRelaxation */
-}
-.entry-delete:focus-visible {
-  outline: 2px solid var(--brand-ring);
-  outline-offset: 2px;
-  opacity: 1;
-}
-.entry-delete svg { width: 15px; height: 15px; }
-
-/* --- 空状态 --- */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 48px 24px;
-  text-align: center;
-  background: var(--brand-card);
-  border: 1px dashed var(--brand-border);
-  border-radius: var(--brand-radius-lg);
-}
-.empty-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: var(--brand-primary-soft);
-  color: var(--brand-primary);
-  margin-bottom: 6px;
-}
-.empty-icon svg.lucide { width: 26px; height: 26px; }
-.empty-title { font-size: 16px; font-weight: 600; line-height: 1.4; }
-.empty-desc { font-size: 13px; color: var(--brand-ink-2); }
-.btn-clear {
-  margin-top: 6px;
-  padding: 8px 18px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--brand-primary);
-  color: var(--brand-primary-foreground);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-.btn-clear:hover { background: var(--brand-primary-hover); }
-.btn-clear:active { transform: scale(0.97); }
-.btn-clear:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
-
-/* --- 页脚 --- */
-.page-footer {
-  margin-top: 48px;
-  padding: 24px 0 8px;
-  border-top: 1px solid var(--brand-border);
-  text-align: center;
-}
-.page-footer p { font-size: 13px; color: var(--brand-ink-3); }
-
-/* --- Toast --- */
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 32px;
-  z-index: 100;
-  max-width: 80vw;
-  transform: translate(-50%, 16px);
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: var(--brand-foreground);
-  color: var(--brand-primary-foreground);
-  font-size: 13px;
-  text-align: center;
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: var(--brand-shadow-float);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-.toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
-
-/* --- 响应式：<768px 工具条竖排、缩略图变小 --- */
-@media (max-width: 767.98px) {
-  .app-bar-inner { padding: 0 16px; }
-  .shell { padding: 0 16px 48px; }
-  .page-title { font-size: 28px; }
-  .page-head { margin: 24px 0 16px; }
-  .toolbar { flex-direction: column; align-items: stretch; }
-  .seg { align-self: flex-start; }
-  .entry-thumb { width: 72px; height: 72px; }
-  .entry-card { padding: 12px; gap: 12px; }
-  .entry-delete { opacity: 1; top: 8px; right: 8px; width: 28px; height: 28px; }
-  .empty-state { padding: 40px 16px; }
-  .toast { bottom: 24px; }
-}
-
-/* --- 减少动效：禁用过渡与上浮 --- */
-@media (prefers-reduced-motion: reduce) {
-  .entry-card, .btn-new, .seg-btn, .btn-clear, .search-box, .toast { transition: none; }
-  .entry-card:hover { transform: none; }
-}
-</style>
+<script src="../js/app.js"></script>
 <script>
 (function () {
   'use strict';
 
-  var STORAGE_KEY = 'timecapsule-entries';
   var list = document.getElementById('diary-list');
   var searchInput = document.getElementById('search-input');
   var searchHint = document.getElementById('search-hint');
   var emptyState = document.getElementById('search-empty-state');
   var listEmptyState = document.getElementById('list-empty-state');
-  var clearBtn = document.querySelector('[data-dom-id="clear-search"]');
-  var segBtns = document.querySelectorAll('[data-dom-id="sort-control"] .seg-btn');
+  var clearBtn = document.getElementById('clear-search');
+  var segBtns = document.querySelectorAll('#sort-control .seg-btn');
   var subtitle = document.getElementById('list-subtitle');
-  var toastEl = document.getElementById('toast');
-  var toastTimer = null;
-
   var groups = [];
   var totalEntries = 0;
-  var i;
 
-  /* --- 示例日记（首次体验的演示内容，不写入 localStorage） --- */
-  var EXAMPLES = [
-    {
-      dateISO: '2026-08-05T07:42', weather: '晴',
-      title: '窗边的一杯热咖啡',
-      body: '<p>清晨六点半，窗外的梧桐叶还挂着露水。冲了一杯手冲咖啡，香气慢慢散开，忽然觉得日子也可以慢一点。</p>',
-      images: [{ src: '../assets/diary-coffee.jpg' }]
-    },
-    {
-      dateISO: '2026-08-05T19:15', weather: '多云',
-      title: '傍晚在公园散步',
-      body: '<p>下班后绕去公园走了两圈，晚风很轻。看见一个小男孩追着泡泡跑，笑得特别大声，原来快乐可以这么简单。</p>',
-      images: [{ src: '../assets/diary-park.jpg' }]
-    },
-    {
-      dateISO: '2026-08-04T23:02', weather: '阴',
-      title: '重读《小王子》',
-      body: '<p>睡前又翻了几页《小王子》，狐狸说的话依旧让人心里一暖。长大以后，才慢慢听懂这些温柔的道理。</p>',
-      images: [{ src: '../assets/diary-book.jpg' }]
-    },
-    {
-      dateISO: '2026-08-02T21:30', weather: '阵雨',
-      title: '给妈妈打了个电话',
-      body: '<p>周末给妈妈打了四十分钟的电话，聊家常也聊最近的烦恼。挂了电话之后，心里踏实了很多，这就是家人的力量吧。</p>',
-      images: []
-    }
-  ];
+  /* 底部导航 */
+  document.getElementById('tab-bar-mount').innerHTML = TC.tabBarHTML('list');
 
-  /* --- 天气图标映射（内联 SVG，零外网依赖） --- */
-  function weatherIcon(name) {
-    var svg = function (inner) {
-      return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
-    };
-    var map = {
-      '晴': svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>'),
-      '多云': svg('<path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>'),
-      '阴': svg('<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>'),
-      '小雨': svg('<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/>'),
-      '阵雨': svg('<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/>'),
-      '雷阵雨': svg('<path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/>'),
-      '雪': svg('<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M8 15h.01"/><path d="M8 19h.01"/><path d="M12 17h.01"/><path d="M12 21h.01"/><path d="M16 15h.01"/><path d="M16 19h.01"/>'),
-      '大风': svg('<path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/>'),
-      '雾': svg('<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 17H7"/><path d="M17 21H9"/>')
-    };
-    return map[name] || map['阴'];
-  }
   var IMAGE_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>';
-  var CHEVRON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="entry-arrow" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+  var AUDIO_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>';
+  var CHEVRON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
   var TRASH_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
 
-  /* --- 工具函数 --- */
-  function readEntries() {
-    try {
-      var raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      return Array.isArray(raw) ? raw : [];
-    } catch (err) { return []; }
-  }
-
-  function plainText(html) {
-    var div = document.createElement('div');
-    div.innerHTML = html || '';
-    return (div.textContent || '').trim();
-  }
-
-  function escapeAttr(s) {
-    return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  var WEEK = ['日', '一', '二', '三', '四', '五', '六'];
-  function groupTitle(dateStr) {
-    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr || '');
-    if (!m) { return dateStr || ''; }
-    var d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-    return m[1] + '年' + Number(m[2]) + '月' + Number(m[3]) + '日 · 星期' + WEEK[d.getDay()];
-  }
-
-  /* --- 渲染：示例日记 + 用户日记，按日期分组 --- */
   function renderEntries() {
-    var saved = readEntries();
-    var savedSet = {};
-    saved.forEach(function (e) { if (e && e.dateISO) { savedSet[e.dateISO] = true; } });
-    var all = EXAMPLES.concat(saved);
-    all.sort(function (a, b) {
-      return String(b.dateISO || '').localeCompare(String(a.dateISO || ''));
-    });
+    var all = TC.readEntries();
+    all.sort(function (a, b) { return String(b.dateISO || '').localeCompare(String(a.dateISO || '')); });
 
     var groupMap = {};
     var groupOrder = [];
@@ -764,16 +256,14 @@ body {
     list.innerHTML = '';
     groupOrder.forEach(function (d) {
       var g = document.createElement('section');
-      g.className = 'diary-group';
+      g.className = 'diary-group fade-in-up';
       g.setAttribute('data-date', d);
       var h = document.createElement('h2');
       h.className = 'group-title';
-      h.textContent = groupTitle(d);
+      h.textContent = TC.makeGroupTitle(d);
       var cards = document.createElement('div');
       cards.className = 'group-cards';
-      groupMap[d].forEach(function (e) {
-        cards.appendChild(buildCard(e, !!savedSet[e.dateISO]));
-      });
+      groupMap[d].forEach(function (e) { cards.appendChild(buildCard(e)); });
       g.appendChild(h);
       g.appendChild(cards);
       list.appendChild(g);
@@ -784,45 +274,37 @@ body {
     for (var i = 0; i < groupEls.length; i++) { groups.push(groupEls[i]); }
     totalEntries = list.querySelectorAll('.entry-card').length;
 
-    if (subtitle) {
-      subtitle.textContent = '共 ' + totalEntries + ' 篇日记 · 最新优先';
-    }
-    if (listEmptyState) {
-      listEmptyState.classList.toggle('is-hidden', totalEntries > 0);
-    }
+    if (subtitle) { subtitle.textContent = '共 ' + totalEntries + ' 篇日记 · 最新优先'; }
+    if (listEmptyState) { listEmptyState.classList.toggle('is-hidden', totalEntries > 0); }
   }
 
-  function buildCard(e, isSaved) {
+  function buildCard(e) {
     var dateISO = String(e.dateISO || '');
-    var preview = plainText(e.body || '');
+    var preview = TC.plainText(e.body || '');
     var firstImg = (e.images && e.images.length && e.images[0].src) ? e.images[0].src : '';
+    var hasAudio = e.audios && e.audios.length > 0;
+    var mood = e.mood ? TC.MOOD_MAP[e.mood] : null;
 
     var html = '';
-    html += '<a class="entry-card ios-card-raised" href="diary-editor.html" data-dom-id="entry-open"';
-    html += ' data-date="' + escapeAttr(dateISO.slice(0, 10)) + '"';
-    html += ' data-title="' + escapeAttr(e.title || '') + '"';
-    html += ' data-preview="' + escapeAttr(preview) + '"';
-    html += ' data-key="' + escapeAttr(dateISO) + '">';
+    html += '<a class="entry-card ios-card-raised" href="diary-editor.html" data-date="' + TC.escapeAttr(dateISO.slice(0, 10)) + '"';
+    html += ' data-title="' + TC.escapeAttr(e.title || '') + '"';
+    html += ' data-preview="' + TC.escapeAttr(preview) + '"';
+    html += ' data-key="' + TC.escapeAttr(dateISO) + '">';
     if (firstImg) {
-      html += '<div class="entry-thumb"><img src="' + escapeAttr(firstImg) + '" alt="' + escapeAttr(e.title || '') + '" loading="lazy"></div>';
+      html += '<div class="entry-thumb"><img src="' + TC.escapeAttr(firstImg) + '" alt="' + TC.escapeAttr(e.title || '') + '" loading="lazy"></div>';
     }
     html += '<div class="entry-body">';
-    html += '<h3 class="entry-title">' + escapeAttr(e.title || '') + '</h3>';
-    html += '<p class="entry-preview">' + escapeAttr(preview) + '</p>';
+    html += '<h3 class="entry-title">' + TC.escapeAttr(e.title || '') + '</h3>';
+    html += '<p class="entry-preview">' + TC.escapeAttr(preview) + '</p>';
     html += '<div class="entry-meta">';
-    if (dateISO.length >= 16) {
-      html += '<span class="meta-time">' + escapeAttr(dateISO.slice(11, 16)) + '</span>';
-    }
-    html += '<span class="meta-pill weather">' + weatherIcon(e.weather) + escapeAttr(e.weather || '') + '</span>';
-    if (firstImg) {
-      html += '<span class="meta-pill image">' + IMAGE_ICON + '含图</span>';
-    }
+    if (dateISO.length >= 16) { html += '<span class="meta-time">' + TC.escapeAttr(dateISO.slice(11, 16)) + '</span>'; }
+    html += '<span class="meta-pill weather">' + TC.weatherIcon(e.weather) + TC.escapeAttr(e.weather || '') + '</span>';
+    if (mood) { html += '<span class="meta-pill mood">' + mood.emoji + TC.escapeAttr(mood.label) + '</span>'; }
+    if (firstImg) { html += '<span class="meta-pill image">' + IMAGE_ICON + '图</span>'; }
+    if (hasAudio) { html += '<span class="meta-pill audio">' + AUDIO_ICON + '录音</span>'; }
     html += '</div></div>';
-    html += CHEVRON_ICON;
-    if (isSaved) {
-      /* 仅用户自己保存的日记可在此直接删除（示例日记不显示删除按钮） */
-      html += '<button type="button" class="entry-delete" data-action="delete-entry" title="删除日记" aria-label="删除日记">' + TRASH_ICON + '</button>';
-    }
+    html += '<span class="entry-arrow">' + CHEVRON_ICON + '</span>';
+    html += '<button type="button" class="entry-delete" data-action="delete-entry" title="删除日记" aria-label="删除日记">' + TRASH_ICON + '</button>';
     html += '</a>';
 
     var wrap = document.createElement('div');
@@ -830,25 +312,13 @@ body {
     return wrap.firstChild;
   }
 
-  function showToast(msg) {
-    if (!toastEl) { return; }
-    toastEl.textContent = msg;
-    toastEl.classList.add('is-visible');
-    if (toastTimer) { clearTimeout(toastTimer); }
-    toastTimer = setTimeout(function () {
-      toastEl.classList.remove('is-visible');
-    }, 2200);
-  }
-
-  /* --- 首次渲染：示例 + 本地保存的用户日记 --- */
+  /* 首次渲染 */
   renderEntries();
 
-  /* --- 页面重新显示（含浏览器往返缓存恢复）时自动刷新，保证返回列表即见最新日记 --- */
-  window.addEventListener('pageshow', function () {
-    renderEntries();
-  });
+  /* 页面恢复时刷新 */
+  window.addEventListener('pageshow', function () { renderEntries(); });
 
-  /* --- 搜索：实时过滤标题 + 预览 --- */
+  /* 搜索 */
   function applySearch(raw) {
     var q = (raw || '').trim().toLowerCase();
     var cards = list.querySelectorAll('.entry-card');
@@ -884,22 +354,16 @@ body {
     }
   }
 
-  if (searchInput) {
-    searchInput.addEventListener('input', function () {
-      applySearch(this.value);
-    });
-  }
+  searchInput.addEventListener('input', function () { applySearch(this.value); });
 
-  if (clearBtn) {
-    clearBtn.addEventListener('click', function () {
-      searchInput.value = '';
-      applySearch('');
-      searchInput.focus();
-      showToast('已清空搜索条件');
-    });
-  }
+  clearBtn.addEventListener('click', function () {
+    searchInput.value = '';
+    applySearch('');
+    searchInput.focus();
+    TC.showToast('已清空搜索条件');
+  });
 
-  /* --- 排序：按 data-date 重排日期分组 --- */
+  /* 排序 */
   function sortGroups(order) {
     var sorted = groups.slice();
     sorted.sort(function (a, b) {
@@ -909,76 +373,54 @@ body {
       return order === 'asc' ? r : -r;
     });
     for (var k = 0; k < sorted.length; k++) { list.appendChild(sorted[k]); }
-    if (subtitle) {
-      subtitle.textContent = '共 ' + totalEntries + ' 篇日记 · ' + (order === 'asc' ? '最早优先' : '最新优先');
-    }
+    if (subtitle) { subtitle.textContent = '共 ' + totalEntries + ' 篇日记 · ' + (order === 'asc' ? '最早优先' : '最新优先'); }
   }
 
-  for (i = 0; i < segBtns.length; i++) {
+  for (var i = 0; i < segBtns.length; i++) {
     (function (btn) {
       btn.addEventListener('click', function () {
         if (btn.classList.contains('is-active')) { return; }
         var order = btn.getAttribute('data-order') || 'desc';
-        var j;
-        for (j = 0; j < segBtns.length; j++) { segBtns[j].classList.remove('is-active'); }
+        for (var j = 0; j < segBtns.length; j++) { segBtns[j].classList.remove('is-active'); }
         btn.classList.add('is-active');
         sortGroups(order);
       });
     })(segBtns[i]);
   }
 
-  /* --- 卡片点击：记录所选日记并跳转编辑器 --- */
+  /* 卡片点击与删除 */
   function closestCard(node) {
     while (node && node !== document) {
-      if (node.getAttribute && node.getAttribute('data-dom-id') === 'entry-open') { return node; }
+      if (node.getAttribute && node.getAttribute('data-key')) { return node; }
       node = node.parentNode;
     }
     return null;
   }
 
-  if (list) {
-    list.addEventListener('click', function (e) {
-      /* 卡片上的删除按钮：直接从列表删除（不进入编辑器） */
-      var delBtn = e.target && e.target.closest ? e.target.closest('[data-action="delete-entry"]') : null;
-      if (delBtn && list.contains(delBtn)) {
-        e.preventDefault();
-        e.stopPropagation();
-        var delCard = delBtn.closest('.entry-card');
-        var delKey = delCard ? delCard.getAttribute('data-key') : '';
-        if (!delKey) { return; }
-        if (!window.confirm('确定删除这篇日记吗？删除后无法恢复。')) { return; }
-        try {
-          var kept = readEntries().filter(function (it) { return it && it.dateISO !== delKey; });
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(kept));
-          showToast('日记已删除');
-          renderEntries();
-        } catch (err) {
-          showToast('删除失败，请重试');
-        }
-        return;
-      }
-      var card = closestCard(e.target);
-      if (!card) { return; }
-      if (e.metaKey || e.ctrlKey || e.shiftKey) { return; }
+  list.addEventListener('click', function (e) {
+    var delBtn = e.target && e.target.closest ? e.target.closest('[data-action="delete-entry"]') : null;
+    if (delBtn && list.contains(delBtn)) {
       e.preventDefault();
-      try {
-        var key = card.getAttribute('data-key') || '';
-        var payload = {};
-        if (key) {
-          /* 本地保存的日记：传唯一标识，编辑器按此完整恢复 */
-          payload = { dateISO: key };
-        } else {
-          payload = {
-            title: card.getAttribute('data-title') || '',
-            preview: card.getAttribute('data-preview') || '',
-            date: card.getAttribute('data-date') || ''
-          };
-        }
-        sessionStorage.setItem('timecapsule:opened-entry', JSON.stringify(payload));
-      } catch (err) { /* ignore */ }
-      window.location.href = card.getAttribute('href') || 'diary-editor.html';
-    });
-  }
+      e.stopPropagation();
+      var delCard = delBtn.closest('.entry-card');
+      var delKey = delCard ? delCard.getAttribute('data-key') : '';
+      if (!delKey) { return; }
+      if (!window.confirm('确定删除这篇日记吗？删除后无法恢复。')) { return; }
+      TC.deleteEntry(delKey);
+      TC.showToast('日记已删除');
+      renderEntries();
+      return;
+    }
+    var card = closestCard(e.target);
+    if (!card) { return; }
+    if (e.metaKey || e.ctrlKey || e.shiftKey) { return; }
+    e.preventDefault();
+    var key = card.getAttribute('data-key') || '';
+    if (key) {
+      try { sessionStorage.setItem('timecapsule:opened-entry', JSON.stringify({ dateISO: key })); } catch (err) { /* ignore */ }
+    }
+    window.location.href = card.getAttribute('href') || 'diary-editor.html';
+  });
 })();
 </script>
 </body>

@@ -4,222 +4,285 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TimeCapsule · 写日记</title>
-    <style id="theme-vars">
-/* ============================================================
-   TimeCapsule · iOS 简约风格主题
-   主色：iOS 系统蓝 (#0A84FF) | 基底：白 + 浅蓝灰
-   ============================================================ */
-
-:root {
-  /* --- 语义化 Token（apply-html-head-contract 必需映射集） --- */
-  --brand-background: #f4f7fc;
-  --brand-foreground: #1b1e25;
-  --brand-card: #ffffff;
-  --brand-card-foreground: #1b1e25;
-  --brand-popover: #ffffff;
-  --brand-popover-foreground: #1b1e25;
-  --brand-primary: #0a84ff;
-  --brand-primary-foreground: #ffffff;
-  --brand-muted: #eaf1fa;
-  --brand-muted-foreground: #64748b;
-  --brand-border: #e4eaf3;
-  --brand-input: #e4eaf3;
-  --brand-ring: #0a84ff;
-  --brand-radius-sm: 8px;
-  --brand-radius-md: 12px;
-  --brand-radius-lg: 16px;
-
-  /* --- 扩展的 iOS 浅色阶（同一主色相的明暗步进） --- */
-  --brand-ink-2: #7a828f;
-  --brand-ink-3: #a7afbc;
-  --brand-primary-hover: #0071e3;
-  --brand-primary-soft: #e9f3ff;
-  --brand-primary-soft-2: #d9ecff;
-  --brand-seg: #f0f4fa;
-  --brand-divider: #edf1f7;
-
-  /* --- 深度 --- */
-  --brand-shadow-card: 0 1px 2px rgba(23, 34, 58, 0.05), 0 1px 3px rgba(23, 34, 58, 0.04);
-  --brand-shadow-float: 0 12px 32px -12px rgba(23, 34, 58, 0.16);
-
-  /* --- 字体 --- */
-  --brand-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
-    "Helvetica Neue", "Microsoft YaHei", "Segoe UI", sans-serif;
-}
-
-/* --- 基底 --- */
-html,
-body {
-  font-family: var(--brand-font-sans);
-  background-color: var(--brand-background);
-  color: var(--brand-foreground);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-::selection {
-  background-color: var(--brand-primary-soft-2);
-  color: var(--brand-foreground);
-}
-
-/* --- 细滚动条（iOS 观感） --- */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--brand-divider) transparent;
-}
-*::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-*::-webkit-scrollbar-thumb {
-  background-color: var(--brand-divider);
-  border-radius: 999px;
-}
-
-/* --- 工具类：次级文字 --- */
-.t-ink-2 {
-  color: var(--brand-ink-2);
-}
-.t-ink-3 {
-  color: var(--brand-ink-3);
-}
-
-/* --- 工具类：浅蓝填充 / 描边 --- */
-.bg-primary-soft {
-  background-color: var(--brand-primary-soft);
-}
-.bg-primary-soft-2 {
-  background-color: var(--brand-primary-soft-2);
-}
-.bg-seg {
-  background-color: var(--brand-seg);
-}
-
-/* --- 工具类：分隔线 --- */
-.divider-h {
-  height: 1px;
-  background-color: var(--brand-divider);
-  border: 0;
-}
-
-/* --- iOS 卡片 --- */
-.ios-card {
-  background-color: var(--brand-card);
-  border: 1px solid var(--brand-border);
-  border-radius: var(--brand-radius-lg);
-}
-.ios-card-raised {
-  background-color: var(--brand-card);
-  border: 1px solid var(--brand-border);
-  border-radius: var(--brand-radius-lg);
-  box-shadow: var(--brand-shadow-card);
-}
-
-/* --- 浮动层阴影（仅弹层使用） --- */
-.shadow-float {
-  box-shadow: var(--brand-shadow-float);
-}
-
-/* --- 减少动效 --- */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-    </style>
-    <style id="semantic-token-fallback">
-      .bg-background { background-color: var(--brand-background); }
-      .text-background { color: var(--brand-background); }
-      .border-background { border-color: var(--brand-background); }
-      .ring-background { --tw-ring-color: var(--brand-background); }
-      .bg-foreground { background-color: var(--brand-foreground); }
-      .text-foreground { color: var(--brand-foreground); }
-      .border-foreground { border-color: var(--brand-foreground); }
-      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
-      .bg-card { background-color: var(--brand-card); }
-      .text-card { color: var(--brand-card); }
-      .border-card { border-color: var(--brand-card); }
-      .ring-card { --tw-ring-color: var(--brand-card); }
-      .bg-card-foreground { background-color: var(--brand-card-foreground); }
-      .text-card-foreground { color: var(--brand-card-foreground); }
-      .border-card-foreground { border-color: var(--brand-card-foreground); }
-      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
-      .bg-popover { background-color: var(--brand-popover); }
-      .text-popover { color: var(--brand-popover); }
-      .border-popover { border-color: var(--brand-popover); }
-      .ring-popover { --tw-ring-color: var(--brand-popover); }
-      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
-      .text-popover-foreground { color: var(--brand-popover-foreground); }
-      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
-      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
-      .bg-primary { background-color: var(--brand-primary); }
-      .text-primary { color: var(--brand-primary); }
-      .border-primary { border-color: var(--brand-primary); }
-      .ring-primary { --tw-ring-color: var(--brand-primary); }
-      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
-      .text-primary-foreground { color: var(--brand-primary-foreground); }
-      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
-      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
-      .bg-muted { background-color: var(--brand-muted); }
-      .text-muted { color: var(--brand-muted); }
-      .border-muted { border-color: var(--brand-muted); }
-      .ring-muted { --tw-ring-color: var(--brand-muted); }
-      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
-      .text-muted-foreground { color: var(--brand-muted-foreground); }
-      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
-      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
-      .bg-border { background-color: var(--brand-border); }
-      .text-border { color: var(--brand-border); }
-      .border-border { border-color: var(--brand-border); }
-      .ring-border { --tw-ring-color: var(--brand-border); }
-      .bg-input { background-color: var(--brand-input); }
-      .text-input { color: var(--brand-input); }
-      .border-input { border-color: var(--brand-input); }
-      .ring-input { --tw-ring-color: var(--brand-input); }
-      .bg-ring { background-color: var(--brand-ring); }
-      .text-ring { color: var(--brand-ring); }
-      .border-ring { border-color: var(--brand-ring); }
-      .ring-ring { --tw-ring-color: var(--brand-ring); }
-    </style>
+    <link rel="stylesheet" href="../css/theme.css">
     <style>
-      .no-scrollbar::-webkit-scrollbar { display: none; }
-      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      [data-icon] {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        -webkit-mask-size: contain;
-        mask-size: contain;
-        -webkit-mask-repeat: no-repeat;
-        mask-repeat: no-repeat;
-        -webkit-mask-position: center;
-        mask-position: center;
-        background-color: currentColor;
+      /* --- 顶部应用栏 --- */
+      .app-bar {
+        position: sticky; top: 0; z-index: 50;
+        background: color-mix(in srgb, var(--brand-card) 85%, transparent);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        border-bottom: 1px solid var(--brand-border);
+      }
+      .app-bar-inner {
+        max-width: 980px; margin: 0 auto; padding: 10px 20px;
+        display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px;
+      }
+      .app-bar-back {
+        justify-self: start; display: inline-flex; align-items: center; gap: 2px;
+        margin-left: -8px; padding: 7px 10px; border: 0; border-radius: 999px;
+        background: transparent; color: var(--brand-primary);
+        font-size: 15px; font-weight: 500; cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      .app-bar-back svg { width: 18px; height: 18px; }
+      .app-bar-back:hover { background: var(--brand-primary-soft); }
+      .app-bar-brand { justify-self: center; font-size: 14px; font-weight: 600; letter-spacing: 0.02em; color: var(--brand-foreground); }
+      .app-bar-save {
+        justify-self: end; padding: 7px 18px; border: 0; border-radius: 999px;
+        background: var(--brand-primary); color: #fff;
+        font-size: 14px; font-weight: 600; cursor: pointer;
+        box-shadow: var(--brand-shadow-card);
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .app-bar-save:hover { background: var(--brand-primary-hover); }
+      .app-bar-save:active { transform: scale(0.96); }
+
+      /* --- 编辑页壳 --- */
+      .editor-page { max-width: 980px; margin: 0 auto; padding: 24px 20px 80px; }
+      .editor-card { padding: 24px 26px 26px; }
+
+      /* --- 日期行 --- */
+      .editor-date-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+      .editor-date { font-size: 15px; font-weight: 600; line-height: 1.4; color: var(--brand-foreground); }
+
+      /* --- 天气选择 --- */
+      .weather-seg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+      .weather-seg button {
+        padding: 5px 14px; border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); font-size: 13px; line-height: 1.2; color: var(--brand-ink-2);
+        cursor: pointer; transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+      }
+      .weather-seg button:hover { color: var(--brand-foreground); border-color: var(--brand-ink-3); }
+      .weather-seg button:active { transform: scale(0.96); }
+      .weather-seg button.seg-active {
+        background: var(--brand-primary-soft); border-color: var(--brand-primary-soft-2);
+        color: var(--brand-primary); font-weight: 600; box-shadow: var(--brand-shadow-card);
+      }
+
+      /* --- 情绪选择 --- */
+      .mood-row { margin-top: 16px; }
+      .mood-label { font-size: 14px; font-weight: 600; color: var(--brand-ink-2); margin-bottom: 10px; }
+      .mood-seg { display: flex; flex-wrap: wrap; gap: 8px; }
+      .mood-chip {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 6px 14px; border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); font-size: 13px; color: var(--brand-ink-2);
+        cursor: pointer; transition: all 0.3s ease;
+      }
+      .mood-chip:hover { border-color: var(--brand-ink-3); transform: translateY(-1px); }
+      .mood-chip.seg-active {
+        border-color: transparent; color: #fff; font-weight: 600;
+        box-shadow: 0 2px 8px -2px rgba(0,0,0,0.15);
+      }
+      .mood-chip .emoji { font-size: 15px; }
+
+      /* --- 分隔线 --- */
+      .editor-divider { margin: 18px 0 0; }
+
+      /* --- 标题输入 --- */
+      .editor-title {
+        display: block; width: 100%; margin-top: 18px; padding: 4px 0;
+        border: 0; background: transparent; font-size: 24px; font-weight: 700;
+        line-height: 1.35; color: var(--brand-foreground); outline: none;
+      }
+      .editor-title::placeholder { color: var(--brand-ink-3); }
+
+      /* --- 格式工具条 --- */
+      .format-toolbar {
+        display: flex; align-items: center; gap: 2px; margin-top: 12px; padding: 4px;
+        width: fit-content; max-width: 100%; background: var(--brand-seg); border-radius: 10px;
+      }
+      .format-toolbar button {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border: 0; border-radius: 7px;
+        background: transparent; color: var(--brand-ink-2); cursor: pointer;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+      .format-toolbar button:hover { background: var(--brand-card); color: var(--brand-foreground); }
+      .format-toolbar svg { width: 16px; height: 16px; }
+
+      /* --- 正文编辑区 --- */
+      .editor-body {
+        position: relative; margin-top: 14px; min-height: 168px;
+        font-size: 16px; line-height: 1.7; color: var(--brand-foreground); outline: none;
+      }
+      .editor-body:empty::before {
+        content: attr(data-placeholder); display: block; color: var(--brand-ink-3); pointer-events: none;
+      }
+
+      /* --- 图片卡片区 --- */
+      .image-cards { display: grid; gap: 18px; margin-top: 20px; }
+      .image-card { margin: 0; }
+      .image-frame {
+        position: relative; overflow: hidden; border-radius: var(--brand-radius-lg); background: var(--brand-muted);
+      }
+      .image-frame img {
+        display: block; width: 100%; max-height: 420px; object-fit: cover;
+        border-radius: var(--brand-radius-lg); cursor: zoom-in; transition: transform 0.4s ease;
+      }
+      .image-frame img.rotate-90 { transform: rotate(90deg); }
+      .image-frame img.rotate-180 { transform: rotate(180deg); }
+      .image-frame img.rotate-270 { transform: rotate(270deg); }
+      .image-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; }
+      .image-action {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 32px; height: 32px; border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); color: var(--brand-ink-2);
+        box-shadow: var(--brand-shadow-float); cursor: pointer;
+        transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      }
+      .image-action:hover { background: var(--brand-primary-soft); color: var(--brand-primary); transform: translateY(-1px); }
+      .image-action:active { transform: scale(0.94); }
+      .image-action-danger { color: rgba(229, 57, 53, 1); }
+      .image-action-danger:hover { background: rgba(229, 57, 53, 0.08); color: rgba(229, 57, 53, 1); }
+      .image-action svg { width: 15px; height: 15px; }
+      .image-hint {
+        position: absolute; right: 10px; bottom: 10px; padding: 4px 10px;
+        border-radius: 999px; font-size: 11px; color: var(--brand-card);
+        background: color-mix(in srgb, var(--brand-foreground) 38%, transparent); pointer-events: none;
+      }
+      .image-caption {
+        display: block; width: 100%; margin-top: 10px; padding: 6px 2px;
+        border: 0; background: transparent; font-size: 13px; line-height: 1.5;
+        color: var(--brand-ink-2); outline: none; transition: box-shadow 0.3s ease;
+      }
+      .image-caption::placeholder { color: var(--brand-ink-3); }
+      .image-caption:focus-visible { box-shadow: 0 0 0 2px var(--brand-ring); }
+
+      /* --- 添加图片按钮 --- */
+      .insert-image {
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+        width: 100%; margin-top: 18px; padding: 22px 16px;
+        border: 1.5px dashed var(--brand-border); border-radius: var(--brand-radius-lg);
+        background: var(--brand-card); color: var(--brand-ink-2); cursor: pointer;
+        transition: background 0.3s ease, border-color 0.3s ease;
+      }
+      .insert-image:hover { background: var(--brand-primary-soft); border-color: color-mix(in srgb, var(--brand-primary) 40%, var(--brand-border)); }
+      .insert-image svg { width: 20px; height: 20px; }
+      .insert-image-title { font-size: 14px; font-weight: 600; color: var(--brand-foreground); }
+      .insert-image-note { font-size: 12px; color: var(--brand-ink-3); }
+
+      /* --- 音频卡片区 --- */
+      .audio-cards { display: grid; gap: 12px; margin-top: 20px; }
+      .audio-card {
+        display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+        background: var(--brand-accent-blue-soft); border: 1px solid var(--brand-accent-blue-soft-2);
+        border-radius: var(--brand-radius-md);
+      }
+      .audio-card-icon {
+        flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+        width: 40px; height: 40px; border-radius: 999px;
+        background: var(--brand-accent-blue); color: #fff;
+      }
+      .audio-card-icon svg { width: 20px; height: 20px; }
+      .audio-card-body { flex: 1; min-width: 0; }
+      .audio-card-name { font-size: 14px; font-weight: 500; color: var(--brand-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .audio-card-time { font-size: 12px; color: var(--brand-ink-2); margin-top: 2px; }
+      .audio-card audio { width: 100%; max-width: 240px; height: 32px; }
+      .audio-card-delete {
+        flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border: 0; border-radius: 999px;
+        background: transparent; color: var(--brand-ink-2); cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      .audio-card-delete:hover { background: rgba(229, 57, 53, 0.1); color: rgba(229, 57, 53, 1); }
+      .audio-card-delete svg { width: 16px; height: 16px; }
+
+      /* --- 录音/上传音频按钮 --- */
+      .audio-actions-row { display: flex; gap: 12px; margin-top: 18px; }
+      .btn-audio {
+        flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+        padding: 12px 16px; border: 1.5px dashed var(--brand-border); border-radius: var(--brand-radius-lg);
+        background: var(--brand-card); color: var(--brand-ink-2); cursor: pointer;
+        font-size: 14px; font-weight: 500; transition: background 0.3s ease, border-color 0.3s ease;
+      }
+      .btn-audio:hover { background: var(--brand-accent-blue-soft); border-color: var(--brand-accent-blue); }
+      .btn-audio svg { width: 18px; height: 18px; }
+      .btn-record.is-recording {
+        background: rgba(229, 57, 53, 0.08); border-color: rgba(229, 57, 53, 0.4); color: rgba(229, 57, 53, 1);
+        animation: recordPulse 1.5s ease-in-out infinite;
+      }
+      @keyframes recordPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.2); }
+        50% { box-shadow: 0 0 0 8px rgba(229, 57, 53, 0); }
+      }
+
+      /* --- 大图预览 --- */
+      .lightbox {
+        position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+        padding: 24px; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      .lightbox.is-open { opacity: 1; visibility: visible; }
+      .lightbox-backdrop { position: absolute; inset: 0; background: rgba(15, 20, 30, 0.72); }
+      .lightbox-body { position: relative; max-width: 92vw; max-height: 88vh; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+      .lightbox-body img { max-width: 92vw; max-height: 80vh; border-radius: var(--brand-radius-lg); box-shadow: var(--brand-shadow-float); }
+      .lightbox-body figcaption { font-size: 13px; color: rgba(255, 255, 255, 0.85); }
+
+      /* --- 底部操作栏 --- */
+      .action-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; }
+      .btn-delete {
+        padding: 10px 6px; border: 0; border-radius: 8px; background: transparent;
+        font-size: 15px; color: rgba(229, 57, 53, 1); cursor: pointer; transition: background 0.2s ease;
+      }
+      .btn-delete:hover { background: rgba(229, 57, 53, 0.08); }
+      .action-bar-right { display: flex; align-items: center; gap: 10px; }
+      .btn-secondary {
+        padding: 9px 24px; border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); color: var(--brand-foreground); font-size: 14px; cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .btn-secondary:hover { background: var(--brand-seg); }
+      .btn-secondary:active { transform: scale(0.96); }
+      .btn-primary {
+        padding: 9px 28px; border: 0; border-radius: 999px;
+        background: var(--brand-primary); color: #fff; font-size: 14px; font-weight: 600;
+        cursor: pointer; box-shadow: var(--brand-shadow-card);
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .btn-primary:hover { background: var(--brand-primary-hover); }
+      .btn-primary:active { transform: scale(0.96); }
+
+      /* --- 页脚 --- */
+      .page-footer { margin-top: 34px; padding: 0 16px 40px; text-align: center; }
+      .page-footer p { font-size: 12px; line-height: 1.6; color: var(--brand-ink-3); }
+
+      /* --- 响应式 --- */
+      @media (max-width: 767.98px) {
+        .app-bar-inner { padding: 10px 12px; gap: 8px; }
+        .editor-page { padding: 16px 12px 80px; }
+        .editor-card { padding: 18px 16px 20px; }
+        .editor-title { font-size: 22px; }
+        .editor-date-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+        .image-frame img { max-height: 300px; }
+        .action-bar { flex-direction: column; align-items: stretch; gap: 12px; }
+        .action-bar-right { justify-content: flex-end; }
+        .audio-actions-row { flex-direction: column; }
+        .audio-card audio { max-width: 160px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { transition: none !important; animation: none !important; }
       }
     </style>
 </head>
-<body class="min-h-screen font-sans antialiased">
+<body>
 <main>
     <header class="app-bar">
         <div class="app-bar-inner">
-            <button type="button" class="app-bar-back" data-dom-id="back-list" aria-label="返回列表">
+            <button type="button" class="app-bar-back" id="back-list" aria-label="返回列表">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
                 <span>返回</span>
             </button>
             <span class="app-bar-brand">TimeCapsule</span>
-            <button type="button" class="app-bar-save" data-dom-id="save-entry" aria-label="保存日记">保存</button>
+            <button type="button" class="app-bar-save" id="save-top" aria-label="保存日记">保存</button>
         </div>
     </header>
 
     <div class="editor-page">
         <section id="editor-shell" class="editor-card ios-card-raised" aria-label="日记编辑器">
             <div class="editor-date-row">
-                <span class="editor-date" id="editor-date">2026年8月5日 星期三</span>
+                <span class="editor-date" id="editor-date"></span>
                 <div class="weather-seg" role="radiogroup" aria-label="选择天气">
                     <button type="button" class="seg-active" role="radio" aria-checked="true" data-weather="晴">晴</button>
                     <button type="button" role="radio" aria-checked="false" data-weather="多云">多云</button>
@@ -232,9 +295,14 @@ body {
                 </div>
             </div>
 
+            <div class="mood-row">
+                <div class="mood-label">今天的心情</div>
+                <div class="mood-seg" id="mood-seg" role="radiogroup" aria-label="选择心情"></div>
+            </div>
+
             <hr class="divider-h editor-divider">
 
-            <input id="editor-title" class="editor-title" type="text" placeholder="标题" value="午后的手冲咖啡" aria-label="日记标题" autocomplete="off">
+            <input id="editor-title" class="editor-title" type="text" placeholder="标题" aria-label="日记标题" autocomplete="off">
 
             <div class="format-toolbar" role="toolbar" aria-label="文本格式工具">
                 <button type="button" data-fmt="bold" title="加粗" aria-label="加粗"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
@@ -243,36 +311,37 @@ body {
                 <button type="button" data-fmt="image" title="插入图片" aria-label="插入图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></button>
             </div>
 
-            <div id="editor-body" class="editor-body" contenteditable="true" data-placeholder="写点什么吧…" aria-label="日记正文">午后把磨好的豆子倒进滤杯，热水缓缓注入，香气在空气里一点点漫开。生活里那些微小的仪式感，其实都是给自己的温柔。今天没有特别的安排，只想慢慢喝完这杯咖啡，把时间还给此刻。</div>
+            <div id="editor-body" class="editor-body" contenteditable="true" data-placeholder="写点什么吧…" aria-label="日记正文"></div>
 
             <hr class="divider-h editor-divider">
 
-            <div id="image-cards" class="image-cards" aria-label="日记图片">
-                <figure class="image-card" data-rotate="0">
-                    <div class="image-frame">
-                        <img src="../assets/diary-coffee.jpg" alt="午后的手冲咖啡">
-                        <span class="image-hint">轻点图片编辑</span>
-                        <div class="image-actions">
-                            <button type="button" class="image-action" data-dom-id="image-rotate" data-action="rotate" title="旋转" aria-label="旋转图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
-                            <button type="button" class="image-action image-action-danger" data-dom-id="image-delete" data-action="delete" title="删除" aria-label="删除图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
-                        </div>
-                    </div>
-                    <input type="text" class="image-caption" placeholder="添加图片说明…" value="今天的第二杯手冲" aria-label="图片说明" autocomplete="off">
-                </figure>
-            </div>
+            <div id="image-cards" class="image-cards" aria-label="日记图片"></div>
 
-            <button type="button" class="insert-image" data-dom-id="insert-image" aria-label="添加图片">
+            <button type="button" class="insert-image" id="insert-image" aria-label="添加图片">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 5h6"/><path d="M19 2v6"/><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/><circle cx="9" cy="9" r="2"/></svg>
                 <span class="insert-image-title">添加图片</span>
                 <span class="insert-image-note">支持 JPG / PNG，最多 9 张</span>
             </button>
+
+            <div id="audio-cards" class="audio-cards" aria-label="日记录音"></div>
+
+            <div class="audio-actions-row">
+                <button type="button" class="btn-audio btn-record" id="btn-record" aria-label="开始录音">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>
+                    <span id="record-label">开始录音</span>
+                </button>
+                <button type="button" class="btn-audio" id="btn-upload-audio" aria-label="上传音频文件">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+                    <span>上传音频</span>
+                </button>
+            </div>
         </section>
 
         <div class="action-bar">
-            <button type="button" class="btn-delete" data-dom-id="delete-entry">删除日记</button>
+            <button type="button" class="btn-delete" id="delete-entry">删除日记</button>
             <div class="action-bar-right">
                 <button type="button" class="btn-secondary" id="cancel-entry">取消</button>
-                <button type="button" class="btn-primary" data-dom-id="save-entry">保存</button>
+                <button type="button" class="btn-primary" id="save-bottom">保存</button>
             </div>
         </div>
 
@@ -281,632 +350,126 @@ body {
         </footer>
     </div>
 
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <input type="file" id="image-input" accept="image/*" multiple hidden>
+    <input type="file" id="audio-input" accept="audio/*" hidden>
 </main>
-<style id="critical-layout">
-/* ============================================================
-   日记编辑器 · 页面布局（iOS 简约：白卡 + 浅蓝灰底 + 系统蓝）
-   所有颜色均来自 --brand-* token；危险红为显式放行（tokenRelaxation）
-   ============================================================ */
-
-/* --- 顶部应用栏：sticky 毛玻璃 --- */
-.app-bar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: color-mix(in srgb, var(--brand-card) 84%, transparent);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  backdrop-filter: blur(18px) saturate(180%);
-  border-bottom: 1px solid var(--brand-border);
-}
-.app-bar-inner {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 10px 20px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 12px;
-}
-.app-bar-back {
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  margin-left: -8px;
-  padding: 7px 10px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--brand-primary);
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-.app-bar-back svg.lucide { width: 18px; height: 18px; }
-.app-bar-back:hover { background: var(--brand-primary-soft); }
-.app-bar-back:active { background: var(--brand-primary-soft-2); }
-.app-bar-back:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 2px; }
-.app-bar-brand {
-  justify-self: center;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--brand-foreground);
-}
-.app-bar-save {
-  justify-self: end;
-  padding: 7px 18px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--brand-primary);
-  color: var(--brand-primary-foreground);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.2;
-  cursor: pointer;
-  box-shadow: var(--brand-shadow-card);
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-.app-bar-save:hover { background: var(--brand-primary-hover); }
-.app-bar-save:active { transform: scale(0.97); }
-.app-bar-save:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 2px; }
-
-/* --- 编辑页壳：max-width 980 居中 --- */
-.editor-page {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 28px 20px 24px;
-}
-.editor-card {
-  padding: 24px 26px 26px;
-}
-
-/* --- 日期行 --- */
-.editor-date-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.editor-date {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--brand-foreground);
-}
-
-/* --- 天气选择控件（iOS 流式 chip） --- */
-.weather-seg {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  background: transparent;
-  border-radius: 0;
-}
-.weather-seg button {
-  padding: 5px 14px;
-  border: 1px solid var(--brand-border);
-  border-radius: 999px;
-  background: var(--brand-card);
-  font-size: 13px;
-  line-height: 1.2;
-  color: var(--brand-ink-2);
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-}
-.weather-seg button:hover {
-  color: var(--brand-foreground);
-  border-color: var(--brand-ink-3);
-}
-.weather-seg button:active { transform: scale(0.97); }
-.weather-seg button:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 2px; }
-.weather-seg button.seg-active {
-  background: var(--brand-primary-soft);
-  border-color: var(--brand-primary-soft-2);
-  color: var(--brand-primary);
-  font-weight: 600;
-  box-shadow: var(--brand-shadow-card);
-}
-
-/* --- 分隔线 --- */
-.editor-divider { margin: 18px 0 0; }
-
-/* --- 标题输入 --- */
-.editor-title {
-  display: block;
-  width: 100%;
-  margin-top: 18px;
-  padding: 4px 0;
-  border: 0;
-  background: transparent;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.35;
-  color: var(--brand-foreground);
-  outline: none;
-}
-.editor-title::placeholder { color: var(--brand-ink-3); }
-.editor-title:focus-visible {
-  box-shadow: 0 0 0 2px var(--brand-ring);
-  border-radius: 6px;
-}
-
-/* --- 格式工具条 --- */
-.format-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-top: 12px;
-  padding: 4px;
-  width: fit-content;
-  max-width: 100%;
-  background: var(--brand-seg);
-  border-radius: 10px;
-}
-.format-toolbar button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--brand-ink-2);
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-.format-toolbar button:hover { background: var(--brand-card); color: var(--brand-foreground); }
-.format-toolbar button:active { background: var(--brand-primary-soft-2); }
-.format-toolbar button:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 1px; }
-.format-toolbar svg.lucide { width: 16px; height: 16px; }
-
-/* --- 正文编辑区 --- */
-.editor-body {
-  position: relative;
-  margin-top: 14px;
-  min-height: 168px;
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--brand-foreground);
-  outline: none;
-}
-.editor-body:empty::before {
-  content: attr(data-placeholder);
-  display: block;
-  color: var(--brand-ink-3);
-  pointer-events: none;
-}
-.editor-body:focus-visible {
-  box-shadow: 0 0 0 2px var(--brand-ring);
-  border-radius: 8px;
-}
-
-/* --- 图片卡片区 --- */
-.image-cards {
-  display: grid;
-  gap: 18px;
-  margin-top: 20px;
-}
-.image-card { margin: 0; }
-.image-frame {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--brand-radius-lg);
-  background: var(--brand-muted);
-}
-.image-frame img {
-  display: block;
-  width: 100%;
-  max-height: 420px;
-  object-fit: cover;
-  border-radius: var(--brand-radius-lg);
-  cursor: zoom-in;
-  transition: transform 0.3s ease;
-}
-.image-frame img.rotate-90 { transform: rotate(90deg); }
-.image-frame img.rotate-180 { transform: rotate(180deg); }
-.image-frame img.rotate-270 { transform: rotate(270deg); }
-
-/* --- 悬浮操作按钮（position:absolute + 明确偏移） --- */
-.image-actions {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  gap: 8px;
-}
-.image-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--brand-border);
-  border-radius: 999px;
-  background: var(--brand-card);
-  color: var(--brand-ink-2);
-  box-shadow: var(--brand-shadow-float);
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
-}
-.image-action:hover {
-  background: var(--brand-primary-soft);
-  color: var(--brand-primary);
-  transform: translateY(-1px);
-}
-.image-action:active { transform: scale(0.94); }
-.image-action:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 2px; }
-.image-action-danger {
-  color: rgba(229, 57, 53, 1); /* tokenRelaxation: 危险操作红，iOS 语义色，无对应 token */
-}
-.image-action-danger:hover {
-  background: rgba(229, 57, 53, 0.08); /* tokenRelaxation: 同色系 hover 底 */
-  color: rgba(229, 57, 53, 1); /* tokenRelaxation */
-}
-.image-action-danger:active {
-  background: rgba(229, 57, 53, 0.14); /* tokenRelaxation */
-}
-.image-action svg.lucide { width: 15px; height: 15px; }
-
-/* --- 图片右下角提示 --- */
-.image-hint {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  line-height: 1.6;
-  color: var(--brand-card);
-  background: color-mix(in srgb, var(--brand-foreground) 38%, transparent);
-  pointer-events: none;
-}
-
-/* --- 大图预览（lightbox） --- */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.24s ease, visibility 0.24s ease;
-}
-.lightbox.is-open {
-  opacity: 1;
-  visibility: visible;
-}
-.lightbox-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 20, 30, 0.72); /* tokenRelaxation: 遮罩层 */
-}
-.lightbox-body {
-  position: relative;
-  max-width: 92vw;
-  max-height: 88vh;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-.lightbox-body img {
-  max-width: 92vw;
-  max-height: 80vh;
-  border-radius: var(--brand-radius-lg);
-  box-shadow: var(--brand-shadow-float);
-  background: var(--brand-card);
-}
-.lightbox-body figcaption {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.85); /* tokenRelaxation: 遮罩层上文字 */
-}
-
-/* --- 图片说明输入 --- */
-.image-caption {
-  display: block;
-  width: 100%;
-  margin-top: 10px;
-  padding: 6px 2px;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--brand-ink-2);
-  outline: none;
-  transition: box-shadow 0.2s ease;
-}
-.image-caption::placeholder { color: var(--brand-ink-3); }
-.image-caption:focus-visible { box-shadow: 0 0 0 2px var(--brand-ring); }
-
-/* --- 添加图片（虚线卡片） --- */
-.insert-image {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  margin-top: 18px;
-  padding: 22px 16px;
-  border: 1.5px dashed var(--brand-border);
-  border-radius: var(--brand-radius-lg);
-  background: var(--brand-card);
-  color: var(--brand-ink-2);
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-.insert-image:hover {
-  background: var(--brand-primary-soft);
-  border-color: color-mix(in srgb, var(--brand-primary) 40%, var(--brand-border));
-}
-.insert-image:active { background: var(--brand-primary-soft-2); }
-.insert-image:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 2px; }
-.insert-image svg.lucide { width: 20px; height: 20px; }
-.insert-image-title {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--brand-foreground);
-}
-.insert-image-note { font-size: 12px; line-height: 1.4; color: var(--brand-ink-3); }
-
-/* --- 底部操作栏 --- */
-.action-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 22px;
-}
-.btn-delete {
-  padding: 10px 6px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  font-size: 15px;
-  line-height: 1.4;
-  color: rgba(229, 57, 53, 1); /* tokenRelaxation: 危险操作红，iOS 语义色 */
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-.btn-delete:hover { background: rgba(229, 57, 53, 0.08); } /* tokenRelaxation */
-.btn-delete:active { background: rgba(229, 57, 53, 0.14); } /* tokenRelaxation */
-.btn-delete:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 2px; }
-.action-bar-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.btn-secondary {
-  padding: 9px 24px;
-  border: 1px solid var(--brand-border);
-  border-radius: 999px;
-  background: var(--brand-card);
-  color: var(--brand-foreground);
-  font-size: 14px;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-.btn-secondary:hover { background: var(--brand-seg); }
-.btn-secondary:active { background: var(--brand-divider); transform: scale(0.97); }
-.btn-secondary:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 2px; }
-.btn-primary {
-  padding: 9px 28px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--brand-primary);
-  color: var(--brand-primary-foreground);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.2;
-  cursor: pointer;
-  box-shadow: var(--brand-shadow-card);
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-.btn-primary:hover { background: var(--brand-primary-hover); }
-.btn-primary:active { transform: scale(0.97); }
-.btn-primary:focus-visible { outline: 2px solid var(--brand-ring); outline-offset: 2px; }
-
-/* --- 页脚 --- */
-.page-footer {
-  margin-top: 34px;
-  padding: 0 16px 40px;
-  text-align: center;
-}
-.page-footer p { font-size: 12px; line-height: 1.6; color: var(--brand-ink-3); }
-
-/* --- Toast --- */
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 32px;
-  z-index: 100;
-  max-width: 80vw;
-  transform: translate(-50%, 16px);
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: var(--brand-foreground);
-  color: var(--brand-primary-foreground);
-  font-size: 13px;
-  line-height: 1.4;
-  text-align: center;
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: var(--brand-shadow-float);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-.toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
-
-/* --- 响应式：<768px 编辑器收窄、操作栏竖排 --- */
-@media (max-width: 767.98px) {
-  .app-bar-inner { padding: 10px 12px; gap: 8px; }
-  .editor-page { padding: 16px 12px 20px; }
-  .editor-card { padding: 18px 16px 20px; }
-  .editor-title { font-size: 22px; }
-  .editor-date-row { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .image-frame img { max-height: 300px; }
-  .action-bar { flex-direction: column; align-items: stretch; gap: 12px; }
-  .action-bar-right { justify-content: flex-end; }
-  .toast { bottom: 24px; }
-}
-
-/* --- 减少动效：禁用过渡与位移 --- */
-@media (prefers-reduced-motion: reduce) {
-  .app-bar-back, .app-bar-save, .weather-seg button, .format-toolbar button,
-  .image-action, .image-caption, .insert-image, .btn-delete, .btn-secondary,
-  .btn-primary, .image-frame img, .toast { transition: none; }
-  .image-action:hover, .app-bar-save:active, .btn-secondary:active,
-  .btn-primary:active, .weather-seg button:active { transform: none; }
-}
-</style>
+<script src="../js/app.js"></script>
 <script>
 (function () {
   'use strict';
 
-  /* --- 常量与 DOM 引用 --- */
-  var STORAGE_KEY = 'timecapsule-entries';
-  var WEEK = ['日', '一', '二', '三', '四', '五', '六'];
-  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
-  /* 本地时间格式（与列表页分组一致）：YYYY-MM-DDTHH:mm */
-  function makeNowISO() {
-    var d = new Date();
-    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + 'T' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
-  }
-  function makeLabel(iso) {
-    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
-    if (!m) { return ''; }
-    var d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-    return m[1] + '年' + Number(m[2]) + '月' + Number(m[3]) + '日 星期' + WEEK[d.getDay()];
-  }
-  /* 当前编辑日记的唯一标识：新日记用当前时间，编辑已存日记时用日记自身的时间 */
-  var dateISO = null;
-  var dateLabel = '';
-
-  var $ = function (sel, root) { return (root || document).querySelector(sel); };
-  var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   var dateEl = $('#editor-date');
   var titleInput = $('#editor-title');
   var bodyEditable = $('#editor-body');
   var imageCards = $('#image-cards');
+  var audioCards = $('#audio-cards');
   var imageInput = $('#image-input');
-  var toastEl = $('#toast');
-  var insertBtn = $('[data-dom-id="insert-image"]');
+  var audioInput = $('#audio-input');
+  var insertBtn = $('#insert-image');
   var toolbarBtns = $$('.format-toolbar button');
   var weatherBtns = $$('.weather-seg button');
-  var saveBtns = $$('[data-dom-id="save-entry"]');
-  var backBtn = $('[data-dom-id="back-list"]');
-  var deleteBtn = $('[data-dom-id="delete-entry"]');
+  var moodSeg = $('#mood-seg');
+  var saveBtns = [$('#save-top'), $('#save-bottom')];
+  var backBtn = $('#back-list');
+  var deleteBtn = $('#delete-entry');
   var cancelBtn = $('#cancel-entry');
+  var recordBtn = $('#btn-record');
+  var recordLabel = $('#record-label');
+  var uploadAudioBtn = $('#btn-upload-audio');
 
+  var dateISO = null;
   var weatherLabel = '晴';
+  var moodKey = 'calm';
   var pendingInsert = 'cards';
-  var toastTimer = null;
 
-  /* --- Toast --- */
-  function showToast(msg) {
-    if (!toastEl) { return; }
-    toastEl.textContent = msg;
-    toastEl.classList.add('is-visible');
-    if (toastTimer) { clearTimeout(toastTimer); }
-    toastTimer = setTimeout(function () {
-      toastEl.classList.remove('is-visible');
-    }, 2000);
-  }
+  /* --- 渲染情绪选择器 --- */
+  TC.MOODS.forEach(function (m) {
+    var chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'mood-chip' + (m.key === moodKey ? ' seg-active' : '');
+    chip.setAttribute('role', 'radio');
+    chip.setAttribute('aria-checked', m.key === moodKey ? 'true' : 'false');
+    chip.setAttribute('data-mood', m.key);
+    chip.innerHTML = '<span class="emoji">' + m.emoji + '</span><span>' + m.label + '</span>';
+    if (m.key === moodKey) { chip.style.background = m.color; }
+    chip.addEventListener('click', function () {
+      moodKey = m.key;
+      moodSeg.querySelectorAll('.mood-chip').forEach(function (c) {
+        c.classList.remove('seg-active');
+        c.style.background = '';
+        c.setAttribute('aria-checked', 'false');
+      });
+      chip.classList.add('seg-active');
+      chip.style.background = m.color;
+      chip.setAttribute('aria-checked', 'true');
+    });
+    moodSeg.appendChild(chip);
+  });
 
-  /* --- 预填：?new=1 → 空白编辑器；点击列表日记 → 完整恢复；示例 → 标题正文 --- */
+  /* --- 预填 --- */
   var isNew = new URLSearchParams(window.location.search).get('new') === '1';
   var opened = null;
-  try {
-    opened = JSON.parse(sessionStorage.getItem('timecapsule:opened-entry') || 'null');
-  } catch (err) { opened = null; }
-
-  function readEntries() {
-    try {
-      var raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      return Array.isArray(raw) ? raw : [];
-    } catch (err) { return []; }
-  }
+  try { opened = JSON.parse(sessionStorage.getItem('timecapsule:opened-entry') || 'null'); } catch (err) { opened = null; }
 
   if (isNew) {
     titleInput.value = '';
     bodyEditable.innerHTML = '';
     imageCards.innerHTML = '';
+    audioCards.innerHTML = '';
   } else if (opened && opened.dateISO) {
-    /* 点击列表中的本地日记：按唯一标识完整恢复 */
-    var full = null;
-    var savedList = readEntries();
-    for (var si = 0; si < savedList.length; si++) {
-      if (savedList[si] && savedList[si].dateISO === opened.dateISO) { full = savedList[si]; break; }
-    }
+    var full = TC.findEntry(opened.dateISO);
     if (full) {
-      /* 使用日记自身的时间作为唯一标识：保存=更新本条，删除=精确删除本条 */
       dateISO = full.dateISO;
-      dateLabel = makeLabel(dateISO);
       titleInput.value = full.title || '';
       bodyEditable.innerHTML = full.body || '';
-      if (full.weather) {
-        weatherBtns.forEach(function (b) {
-          b.classList.remove('seg-active');
-          b.setAttribute('aria-checked', 'false');
-          if (b.getAttribute('data-weather') === full.weather) {
-            b.classList.add('seg-active');
-            b.setAttribute('aria-checked', 'true');
-            weatherLabel = full.weather;
-          }
-        });
-      }
-      (full.images || []).forEach(function (im) {
-        if (im && im.src) {
-          imageCards.appendChild(createImageCard(im.src, im.caption || '', im.rotate || 0));
-        }
-      });
-      if (typeof lucide !== 'undefined' && lucide.createIcons) { lucide.createIcons(); }
-    }
-  } else if (opened && opened.title) {
-    titleInput.value = opened.title || '';
-    bodyEditable.innerHTML = opened.preview || '';
-  }
-
-  /* --- 新日记：使用当前时间；并刷新顶部日期显示 --- */
-  if (!dateISO) { dateISO = makeNowISO(); }
-  if (!dateLabel) { dateLabel = makeLabel(dateISO); }
-  if (dateEl) { dateEl.textContent = dateLabel; }
-
-  /* --- 天气分段控件 --- */
-  weatherBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      weatherLabel = btn.getAttribute('data-weather') || '晴';
+      weatherLabel = full.weather || '晴';
+      moodKey = full.mood || 'calm';
       weatherBtns.forEach(function (b) {
         b.classList.remove('seg-active');
         b.setAttribute('aria-checked', 'false');
+        if (b.getAttribute('data-weather') === weatherLabel) { b.classList.add('seg-active'); b.setAttribute('aria-checked', 'true'); }
       });
-      btn.classList.add('seg-active');
-      btn.setAttribute('aria-checked', 'true');
+      moodSeg.querySelectorAll('.mood-chip').forEach(function (c) {
+        c.classList.remove('seg-active');
+        c.style.background = '';
+        c.setAttribute('aria-checked', 'false');
+        if (c.getAttribute('data-mood') === moodKey) {
+          c.classList.add('seg-active');
+          var m = TC.MOOD_MAP[moodKey];
+          if (m) { c.style.background = m.color; }
+          c.setAttribute('aria-checked', 'true');
+        }
+      });
+      (full.images || []).forEach(function (im) {
+        if (im && im.src) { imageCards.appendChild(createImageCard(im.src, im.caption || '', im.rotate || 0)); }
+      });
+      (full.audios || []).forEach(function (au) {
+        if (au && au.src) { audioCards.appendChild(createAudioCard(au.src, au.name || '录音', au.duration || 0)); }
+      });
+    }
+  }
+
+  if (!dateISO) { dateISO = TC.makeNowISO(); }
+  dateEl.textContent = TC.makeLabel(dateISO);
+
+  /* --- 天气选择 --- */
+  weatherBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      weatherLabel = btn.getAttribute('data-weather') || '晴';
+      weatherBtns.forEach(function (b) { b.classList.remove('seg-active'); b.setAttribute('aria-checked', 'false'); });
+      btn.classList.add('seg-active'); btn.setAttribute('aria-checked', 'true');
     });
   });
 
-  /* --- 正文：清空后显示占位 --- */
+  /* --- 正文 --- */
   bodyEditable.addEventListener('input', function () {
     if (bodyEditable.innerText.trim() === '') { bodyEditable.innerHTML = ''; }
   });
 
-  /* --- 格式工具条：对正文执行 execCommand --- */
+  /* --- 格式工具条 --- */
   toolbarBtns.forEach(function (btn) {
     btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
     btn.addEventListener('click', function () {
@@ -919,7 +482,7 @@ body {
     });
   });
 
-  /* --- 图片：压缩后转 dataURL（最长边 1280px / JPEG 0.8），避免撑爆 localStorage --- */
+  /* --- 图片压缩 --- */
   var MAX_EDGE = 1280;
   function compressImage(file, cb) {
     var reader = new FileReader();
@@ -931,16 +494,13 @@ body {
           var w = Math.max(1, Math.round(img.width * scale));
           var h = Math.max(1, Math.round(img.height * scale));
           var canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
+          canvas.width = w; canvas.height = h;
           var ctx = canvas.getContext('2d');
-          ctx.fillStyle = '#ffffff'; /* 透明 PNG 转白底，避免 JPEG 黑底 */
+          ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, w, h);
           ctx.drawImage(img, 0, 0, w, h);
           cb(canvas.toDataURL('image/jpeg', 0.8));
-        } catch (err) {
-          cb(reader.result); /* 压缩失败退回原图 */
-        }
+        } catch (err) { cb(reader.result); }
       };
       img.onerror = function () { cb(reader.result); };
       img.src = reader.result;
@@ -957,20 +517,16 @@ body {
         '<img src="' + src + '" alt="日记图片" tabindex="0">' +
         '<span class="image-hint">轻点图片预览 · 可旋转删除</span>' +
         '<div class="image-actions">' +
-          '<button type="button" class="image-action" data-dom-id="image-rotate" data-action="rotate" title="旋转" aria-label="旋转图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>' +
-          '<button type="button" class="image-action image-action-danger" data-dom-id="image-delete" data-action="delete" title="删除" aria-label="删除图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>' +
+          '<button type="button" class="image-action" data-action="rotate" title="旋转" aria-label="旋转图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>' +
+          '<button type="button" class="image-action image-action-danger" data-action="delete" title="删除" aria-label="删除图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>' +
         '</div>' +
       '</div>' +
       '<input type="text" class="image-caption" placeholder="添加图片说明…" aria-label="图片说明" autocomplete="off">';
-    if (caption) {
-      var cap = fig.querySelector('.image-caption');
-      if (cap) { cap.value = caption; }
-    }
+    if (caption) { var cap = fig.querySelector('.image-caption'); if (cap) { cap.value = caption; } }
     applyRotate(fig, parseInt(fig.getAttribute('data-rotate') || '0', 10));
     return fig;
   }
 
-  /* --- 应用旋转角度到图片（0/90/180/270） --- */
   function applyRotate(card, step) {
     var img = card.querySelector('.image-frame img');
     if (!img) { return; }
@@ -983,9 +539,8 @@ body {
 
   function cardCount() { return imageCards.querySelectorAll('.image-card').length; }
 
-  /* --- 添加图片按钮 → 触发隐藏文件输入（最多 9 张） --- */
   insertBtn.addEventListener('click', function () {
-    if (cardCount() >= 9) { showToast('最多添加 9 张图片'); return; }
+    if (cardCount() >= 9) { TC.showToast('最多添加 9 张图片'); return; }
     pendingInsert = 'cards';
     imageInput.click();
   });
@@ -997,63 +552,48 @@ body {
       compressImage(files[0], function (dataUrl) {
         bodyEditable.focus();
         document.execCommand('insertImage', false, dataUrl);
-        showToast('已插入图片');
+        TC.showToast('已插入图片');
       });
     } else {
       var room = 9 - cardCount();
       var toAdd = files.slice(0, room);
-      var left = files.length - toAdd.length;
       toAdd.forEach(function (file, idx) {
         compressImage(file, function (dataUrl) {
           imageCards.appendChild(createImageCard(dataUrl, ''));
-          if (idx === toAdd.length - 1 && left > 0) { showToast('最多 9 张图片，已忽略多余图片'); }
         });
       });
-      if (!toAdd.length) { showToast('最多添加 9 张图片'); }
+      if (files.length > room) { TC.showToast('最多 9 张图片，已忽略多余图片'); }
     }
     imageInput.value = '';
   });
 
-  /* --- 图片卡片：旋转 90° / 删除 / 点击预览（事件委托） --- */
   imageCards.addEventListener('click', function (e) {
     var btn = e.target && e.target.closest ? e.target.closest('[data-action]') : null;
     if (btn && imageCards.contains(btn)) {
       var card = btn.closest('.image-card');
       if (!card) { return; }
       if (btn.getAttribute('data-action') === 'rotate') {
-        var step = (parseInt(card.getAttribute('data-rotate') || '0', 10) + 1) % 4;
-        applyRotate(card, step);
+        applyRotate(card, (parseInt(card.getAttribute('data-rotate') || '0', 10) + 1) % 4);
       } else if (btn.getAttribute('data-action') === 'delete') {
         card.remove();
-        showToast('已删除图片');
+        TC.showToast('已删除图片');
       }
       return;
     }
-    /* 点击图片本体 → 打开大图预览 */
     var img = e.target && e.target.closest ? e.target.closest('.image-frame img') : null;
-    if (img && imageCards.contains(img)) {
-      openLightbox(img.getAttribute('src'));
-    }
+    if (img && imageCards.contains(img)) { openLightbox(img.getAttribute('src')); }
   });
 
-  /* --- 大图预览（lightbox） --- */
+  /* --- 大图预览 --- */
   var lightboxEl = null;
   function openLightbox(src) {
     if (!src) { return; }
     if (!lightboxEl) {
       lightboxEl = document.createElement('div');
       lightboxEl.className = 'lightbox';
-      lightboxEl.innerHTML =
-        '<div class="lightbox-backdrop"></div>' +
-        '<figure class="lightbox-body">' +
-          '<img src="" alt="图片预览">' +
-          '<figcaption>点击任意处关闭</figcaption>' +
-        '</figure>';
+      lightboxEl.innerHTML = '<div class="lightbox-backdrop"></div><figure class="lightbox-body"><img src="" alt="图片预览"><figcaption>点击任意处关闭</figcaption></figure>';
       document.body.appendChild(lightboxEl);
       lightboxEl.addEventListener('click', closeLightbox);
-      lightboxEl.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { closeLightbox(); }
-      });
     }
     lightboxEl.querySelector('img').src = src;
     lightboxEl.classList.add('is-open');
@@ -1065,7 +605,105 @@ body {
     document.body.style.overflow = '';
   }
 
-  /* --- 保存：标题 / 正文 / 天气 / 图片 / 日期 → localStorage（readEntries 见上方预填段） --- */
+  /* --- 音频录制 --- */
+  var mediaRecorder = null;
+  var audioChunks = [];
+  var isRecording = false;
+  var recordTimer = null;
+  var recordSeconds = 0;
+
+  recordBtn.addEventListener('click', function () {
+    if (isRecording) { stopRecording(); } else { startRecording(); }
+  });
+
+  function startRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      TC.showToast('当前浏览器不支持录音功能');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      mediaRecorder.addEventListener('dataavailable', function (e) {
+        if (e.data.size > 0) { audioChunks.push(e.data); }
+      });
+      mediaRecorder.addEventListener('stop', function () {
+        var blob = new Blob(audioChunks, { type: 'audio/webm' });
+        var reader = new FileReader();
+        reader.onload = function () {
+          var duration = recordSeconds;
+          audioCards.appendChild(createAudioCard(reader.result, '录音 ' + TC.pad2(Math.floor(duration / 60)) + ':' + TC.pad2(duration % 60), duration));
+          TC.showToast('录音已添加');
+        };
+        reader.readAsDataURL(blob);
+        stream.getTracks().forEach(function (t) { t.stop(); });
+      });
+      mediaRecorder.start();
+      isRecording = true;
+      recordSeconds = 0;
+      recordBtn.classList.add('is-recording');
+      recordLabel.textContent = '停止录音 (00:00)';
+      recordTimer = setInterval(function () {
+        recordSeconds++;
+        recordLabel.textContent = '停止录音 (' + TC.pad2(Math.floor(recordSeconds / 60)) + ':' + TC.pad2(recordSeconds % 60) + ')';
+      }, 1000);
+    }).catch(function (err) {
+      TC.showToast('无法访问麦克风：' + (err.message || '请检查权限'));
+    });
+  }
+
+  function stopRecording() {
+    if (!mediaRecorder || mediaRecorder.state === 'inactive') { return; }
+    mediaRecorder.stop();
+    isRecording = false;
+    recordBtn.classList.remove('is-recording');
+    recordLabel.textContent = '开始录音';
+    if (recordTimer) { clearInterval(recordTimer); recordTimer = null; }
+  }
+
+  /* --- 上传音频文件 --- */
+  uploadAudioBtn.addEventListener('click', function () { audioInput.click(); });
+
+  audioInput.addEventListener('change', function () {
+    var file = (audioInput.files || [])[0];
+    if (!file) { return; }
+    if (file.size > 5 * 1024 * 1024) { TC.showToast('音频文件过大（限 5MB）'); audioInput.value = ''; return; }
+    var reader = new FileReader();
+    reader.onload = function () {
+      var name = file.name.replace(/\.[^.]+$/, '');
+      audioCards.appendChild(createAudioCard(reader.result, name, 0));
+      TC.showToast('音频已添加');
+    };
+    reader.readAsDataURL(file);
+    audioInput.value = '';
+  });
+
+  /* --- 创建音频卡片 --- */
+  function createAudioCard(src, name, duration) {
+    var div = document.createElement('div');
+    div.className = 'audio-card';
+    div.setAttribute('data-src', src);
+    var durStr = duration > 0 ? TC.pad2(Math.floor(duration / 60)) + ':' + TC.pad2(duration % 60) : '';
+    div.innerHTML =
+      '<div class="audio-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></div>' +
+      '<div class="audio-card-body">' +
+        '<div class="audio-card-name">' + TC.escapeAttr(name) + '</div>' +
+        (durStr ? '<div class="audio-card-time">时长 ' + durStr + '</div>' : '') +
+      '</div>' +
+      '<audio controls src="' + src + '"></audio>' +
+      '<button type="button" class="audio-card-delete" data-action="delete-audio" title="删除" aria-label="删除音频"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+    return div;
+  }
+
+  audioCards.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest('[data-action="delete-audio"]') : null;
+    if (btn && audioCards.contains(btn)) {
+      btn.closest('.audio-card').remove();
+      TC.showToast('已删除音频');
+    }
+  });
+
+  /* --- 保存 --- */
   function collectEntry() {
     var images = $$('.image-card', imageCards).map(function (card) {
       var img = card.querySelector('.image-frame img');
@@ -1076,32 +714,42 @@ body {
         rotate: parseInt(card.getAttribute('data-rotate') || '0', 10)
       };
     });
+    var audios = $$('.audio-card', audioCards).map(function (card) {
+      var nameEl = card.querySelector('.audio-card-name');
+      var timeEl = card.querySelector('.audio-card-time');
+      return {
+        src: card.getAttribute('data-src') || '',
+        name: nameEl ? nameEl.textContent : '录音',
+        duration: timeEl ? parseInt((timeEl.textContent.match(/\d+/) || [0])[0], 10) : 0
+      };
+    });
     return {
-      date: dateLabel,
       dateISO: dateISO,
+      date: TC.makeLabel(dateISO),
       weather: weatherLabel,
+      mood: moodKey,
       title: titleInput.value.trim(),
       body: bodyEditable.innerHTML.trim(),
-      images: images
+      images: images,
+      audios: audios
     };
   }
 
   function saveEntry() {
     var entry = collectEntry();
-    var list = readEntries();
-    var idx = -1;
-    for (var i = 0; i < list.length; i++) {
-      if (list[i] && list[i].dateISO === dateISO) { idx = i; break; }
+    if (!entry.title && !TC.plainText(entry.body)) {
+      TC.showToast('请输入标题或正文');
+      return;
     }
-    if (idx >= 0) { list[idx] = entry; } else { list.unshift(entry); }
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-      showToast('已保存');
+      TC.saveEntry(entry);
+      TC.showToast('已保存');
+      setTimeout(function () { window.location.href = 'diary-list.html'; }, 500);
     } catch (err) {
       if (err && (err.name === 'QuotaExceededError' || err.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
-        showToast('保存失败：图片太多，请删减几张图片后重试');
+        TC.showToast('保存失败：图片或录音太多，请删减后重试');
       } else {
-        showToast('保存失败，请重试');
+        TC.showToast('保存失败，请重试');
       }
     }
   }
@@ -1110,18 +758,18 @@ body {
 
   /* --- 返回 / 取消 / 删除 --- */
   backBtn.addEventListener('click', function () {
-    showToast('已返回');
-    setTimeout(function () { window.location.href = 'diary-list.html'; }, 350);
+    window.location.href = 'diary-list.html';
   });
 
-  cancelBtn.addEventListener('click', function () { showToast('已取消'); });
+  cancelBtn.addEventListener('click', function () {
+    window.location.href = 'diary-list.html';
+  });
 
   deleteBtn.addEventListener('click', function () {
     if (!window.confirm('确定删除这篇日记吗？删除后无法恢复。')) { return; }
-    var kept = readEntries().filter(function (it) { return it && it.dateISO !== dateISO; });
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(kept)); } catch (err) { /* ignore */ }
-    showToast('日记已删除');
-    setTimeout(function () { window.location.href = 'diary-list.html'; }, 600);
+    TC.deleteEntry(dateISO);
+    TC.showToast('日记已删除');
+    setTimeout(function () { window.location.href = 'diary-list.html'; }, 500);
   });
 })();
 </script>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeCapsule · 历史回顾</title>
+    <link rel="stylesheet" href="../css/theme.css">
+    <style>
+      /* --- 顶部应用栏 --- */
+      .app-bar {
+        position: sticky; top: 0; z-index: 50;
+        background: color-mix(in srgb, var(--brand-card) 85%, transparent);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        border-bottom: 1px solid var(--brand-border);
+      }
+      .app-bar-inner {
+        max-width: 980px; margin: 0 auto; padding: 0 24px; height: 60px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--brand-foreground); }
+      .brand-badge {
+        display: flex; align-items: center; justify-content: center;
+        width: 34px; height: 34px; border-radius: 10px;
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent-blue));
+        color: #fff; box-shadow: var(--brand-shadow-card);
+      }
+      .brand-badge svg { width: 18px; height: 18px; }
+      .brand-name { font-size: 17px; font-weight: 600; letter-spacing: 0.01em; }
+      .btn-new {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 18px; border-radius: 999px;
+        background: var(--brand-primary); color: #fff;
+        font-size: 14px; font-weight: 600; line-height: 1.2; text-decoration: none;
+        box-shadow: var(--brand-shadow-card);
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .btn-new:hover { background: var(--brand-primary-hover); }
+      .btn-new:active { transform: scale(0.96); }
+      .btn-new svg { width: 16px; height: 16px; }
+
+      /* --- 内容壳 --- */
+      .shell { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+      /* --- 页面标题 --- */
+      .page-head { display: flex; flex-direction: column; gap: 6px; margin: 28px 0 20px; }
+      .page-title { font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
+      .page-sub { font-size: 14px; color: var(--brand-ink-2); }
+
+      /* --- 日历卡片 --- */
+      .calendar-card {
+        max-width: 560px; margin: 0 auto 28px; padding: 20px 22px 22px;
+      }
+      .cal-header {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; margin-bottom: 14px;
+      }
+      .cal-nav { display: flex; align-items: center; gap: 6px; }
+      .cal-btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 34px; height: 34px; padding: 0;
+        border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); color: var(--brand-ink-2);
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+      }
+      .cal-btn:hover { background: var(--brand-primary-soft); color: var(--brand-primary); border-color: var(--brand-primary-soft-2); }
+      .cal-btn:active { transform: scale(0.92); }
+      .cal-btn svg { width: 18px; height: 18px; }
+      .cal-title-wrap {
+        display: flex; flex-direction: column; align-items: center; gap: 1px;
+        min-width: 96px;
+      }
+      .cal-title { font-size: 16px; font-weight: 600; line-height: 1.3; color: var(--brand-foreground); }
+      .cal-count { font-size: 11px; line-height: 1.4; color: var(--brand-ink-3); }
+      .cal-today-btn {
+        padding: 7px 16px; border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); color: var(--brand-ink-2);
+        font-size: 13px; font-weight: 500; line-height: 1.2; cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      }
+      .cal-today-btn:hover { background: var(--brand-primary-soft); color: var(--brand-primary); border-color: var(--brand-primary-soft-2); }
+      .cal-today-btn:active { transform: scale(0.96); }
+
+      .cal-grid {
+        display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+      }
+      .cal-weekday {
+        text-align: center; font-size: 12px; font-weight: 600; color: var(--brand-ink-3);
+        padding: 6px 0 8px;
+      }
+      .cal-cell {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 4px; min-height: 52px; padding: 4px 2px;
+        border: 1.5px solid transparent; border-radius: var(--brand-radius-md);
+        background: transparent; cursor: pointer; touch-action: manipulation;
+        transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      }
+      .cal-cell:hover { background: var(--brand-primary-soft); }
+      .cal-cell:active { transform: scale(0.93); }
+      .cal-day { font-size: 14px; font-weight: 500; line-height: 1; color: var(--brand-foreground); }
+
+      .cal-cell.is-other-month { opacity: 0.35; }
+      .cal-cell.is-other-month .cal-day { color: var(--brand-ink-3); }
+
+      .cal-cell.is-today { border-color: var(--brand-primary); }
+      .cal-cell.is-today .cal-day { color: var(--brand-primary); font-weight: 700; }
+
+      .cal-cell.is-selected { background: var(--brand-primary); border-color: var(--brand-primary); }
+      .cal-cell.is-selected .cal-day { color: #fff; font-weight: 700; }
+      .cal-cell.is-selected:hover { background: var(--brand-primary-hover); }
+      .cal-cell.is-selected .cal-dot { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.7); }
+
+      .cal-dots { display: flex; align-items: center; gap: 3px; min-height: 6px; }
+      .cal-dot { width: 6px; height: 6px; border-radius: 999px; flex-shrink: 0; }
+
+      /* --- 选中日期的日记列表 --- */
+      .selected-day { margin-bottom: 28px; scroll-margin-top: 80px; }
+      .selected-day-head {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;
+      }
+      .selected-day-close {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; padding: 0; flex-shrink: 0;
+        border: 0; border-radius: 999px; background: var(--brand-seg); color: var(--brand-ink-2);
+        cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
+      }
+      .selected-day-close:hover { background: var(--brand-primary-soft); color: var(--brand-primary); }
+      .selected-day-close svg { width: 16px; height: 16px; }
+
+      .cal-day-empty {
+        display: flex; flex-direction: column; align-items: center; gap: 8px;
+        padding: 32px 24px; text-align: center;
+        background: var(--brand-card); border: 1px dashed var(--brand-border); border-radius: var(--brand-radius-lg);
+      }
+      .cal-day-empty-icon {
+        display: flex; align-items: center; justify-content: center;
+        width: 48px; height: 48px; border-radius: 999px;
+        background: var(--brand-primary-soft); color: var(--brand-primary);
+      }
+      .cal-day-empty-icon svg { width: 22px; height: 22px; }
+      .cal-day-empty p { font-size: 14px; color: var(--brand-ink-2); }
+
+      /* --- 全部日记区 --- */
+      .all-section { margin-top: 8px; }
+      .section-title {
+        font-size: 18px; font-weight: 600; line-height: 1.4; color: var(--brand-foreground);
+        margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+      }
+      .section-title::before { content: ""; width: 3px; height: 16px; border-radius: 999px; background: var(--brand-accent-blue); }
+
+      /* --- 日记分组 --- */
+      .diary-group { margin-bottom: 24px; }
+      .group-title {
+        display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+        font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--brand-ink-2);
+      }
+      .group-title::before { content: ""; width: 3px; height: 14px; border-radius: 999px; background: var(--brand-primary); }
+      .group-cards { display: flex; flex-direction: column; gap: 12px; }
+
+      /* --- 日记卡片 --- */
+      .entry-card {
+        position: relative; display: flex; align-items: center; gap: 14px;
+        padding: 14px; text-decoration: none; color: inherit;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+      .entry-card:hover { transform: translateY(-2px); border-color: var(--brand-primary-soft-2); box-shadow: var(--brand-shadow-soft); }
+      .entry-card:active { transform: translateY(0); }
+      .entry-thumb {
+        flex-shrink: 0; width: 88px; height: 88px;
+        border-radius: var(--brand-radius-md); overflow: hidden; background: var(--brand-muted);
+      }
+      .entry-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .entry-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+      .entry-title { font-size: 16px; font-weight: 600; line-height: 1.4; color: var(--brand-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .entry-preview { font-size: 14px; line-height: 1.6; color: var(--brand-ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .entry-meta { margin-top: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--brand-ink-2); flex-wrap: wrap; }
+      .meta-time { font-variant-numeric: tabular-nums; }
+      .meta-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 12px; line-height: 1.6; }
+      .meta-pill svg { width: 12px; height: 12px; }
+      .meta-pill.weather { background: var(--brand-primary-soft); color: var(--brand-primary); }
+      .meta-pill.mood { background: var(--brand-accent-blue-soft); color: var(--brand-accent-blue); }
+      .meta-pill.image { background: var(--brand-seg); color: var(--brand-ink-2); }
+      .meta-pill.audio { background: var(--brand-accent-blue-soft); color: var(--brand-accent-blue); }
+      .entry-arrow { flex-shrink: 0; display: flex; align-items: center; color: var(--brand-ink-3); }
+      .entry-arrow svg { width: 18px; height: 18px; }
+
+      /* --- 卡片删除按钮 --- */
+      .entry-delete {
+        position: absolute; top: 10px; right: 10px; z-index: 2;
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; padding: 0;
+        border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); color: var(--brand-ink-2);
+        cursor: pointer; opacity: 0;
+        transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+      }
+      .entry-card:hover .entry-delete { opacity: 1; }
+      .entry-delete:hover { background: rgba(229, 57, 53, 0.08); color: rgba(229, 57, 53, 1); border-color: rgba(229, 57, 53, 0.35); }
+      .entry-delete svg { width: 15px; height: 15px; }
+
+      /* --- 空状态 --- */
+      .empty-state {
+        display: flex; flex-direction: column; align-items: center; gap: 8px;
+        padding: 48px 24px; text-align: center;
+        background: var(--brand-card); border: 1px dashed var(--brand-border); border-radius: var(--brand-radius-lg);
+      }
+      .empty-icon { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 999px; background: var(--brand-primary-soft); color: var(--brand-primary); margin-bottom: 6px; }
+      .empty-icon svg { width: 26px; height: 26px; }
+      .empty-title { font-size: 16px; font-weight: 600; line-height: 1.4; }
+      .empty-desc { font-size: 13px; color: var(--brand-ink-2); }
+
+      /* --- 页脚 --- */
+      .page-footer { margin-top: 40px; padding: 20px 0 8px; border-top: 1px solid var(--brand-border); text-align: center; }
+      .page-footer p { font-size: 13px; color: var(--brand-ink-3); }
+
+      /* --- 响应式 --- */
+      @media (max-width: 767.98px) {
+        .app-bar-inner { padding: 0 16px; }
+        .shell { padding: 0 16px 100px; }
+        .page-title { font-size: 26px; }
+        .page-head { margin: 22px 0 16px; }
+        .calendar-card { padding: 16px 14px 18px; }
+        .cal-cell { min-height: 44px; }
+        .cal-day { font-size: 13px; }
+        .cal-today-btn { padding: 6px 12px; font-size: 12px; }
+        .entry-thumb { width: 68px; height: 68px; }
+        .entry-card { padding: 12px; gap: 12px; }
+        .entry-delete { opacity: 1; top: 8px; right: 8px; width: 28px; height: 28px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .entry-card, .btn-new, .cal-btn, .cal-cell, .cal-today-btn, .selected-day-close { transition: none; }
+        .entry-card:hover, .cal-cell:active { transform: none; }
+      }
+    </style>
+</head>
+<body>
+<main>
+    <header class="app-bar">
+        <div class="app-bar-inner">
+            <a href="diary-list.html" class="brand" aria-label="TimeCapsule 首页">
+                <span class="brand-badge"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
+                <span class="brand-name">TimeCapsule</span>
+            </a>
+            <a href="diary-editor.html?new=1" class="btn-new">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                <span>写日记</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="shell">
+        <section class="page-head">
+            <h1 class="page-title">历史回顾</h1>
+            <p class="page-sub" id="history-subtitle">共 0 篇日记 · 按日历浏览</p>
+        </section>
+
+        <section class="calendar-card ios-card-raised" aria-label="日历">
+            <div class="cal-header">
+                <div class="cal-nav">
+                    <button type="button" class="cal-btn" id="cal-prev" aria-label="上一月">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <div class="cal-title-wrap">
+                        <span class="cal-title" id="cal-title"></span>
+                        <span class="cal-count" id="cal-count"></span>
+                    </div>
+                    <button type="button" class="cal-btn" id="cal-next" aria-label="下一月">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                </div>
+                <button type="button" class="cal-today-btn" id="cal-today">今天</button>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+        </section>
+
+        <section id="selected-day" class="selected-day is-hidden" aria-live="polite">
+            <div class="selected-day-head">
+                <h2 class="group-title" id="selected-day-title"></h2>
+                <button type="button" class="selected-day-close" id="selected-day-close" aria-label="关闭选中日期">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div class="group-cards" id="selected-day-cards"></div>
+            <div id="selected-day-empty" class="cal-day-empty is-hidden">
+                <span class="cal-day-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+                <p>这天没有记录</p>
+            </div>
+        </section>
+
+        <section class="all-section">
+            <h2 class="section-title">全部日记</h2>
+            <div id="all-list"></div>
+            <div id="all-empty-state" class="empty-state is-hidden" role="status">
+                <span class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
+                <p class="empty-title">还没有日记</p>
+                <p class="empty-desc">点击右上角"写日记"，记录你的第一篇时光胶囊</p>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <p>&copy; 2026 TimeCapsule &middot; 记录每一个平凡瞬间</p>
+        </footer>
+    </div>
+
+    <div id="tab-bar-mount"></div>
+</main>
+<script src="../js/app.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* --- DOM 引用 --- */
+  var calGrid = document.getElementById('cal-grid');
+  var calTitle = document.getElementById('cal-title');
+  var calCount = document.getElementById('cal-count');
+  var prevBtn = document.getElementById('cal-prev');
+  var nextBtn = document.getElementById('cal-next');
+  var todayBtn = document.getElementById('cal-today');
+  var selectedDaySection = document.getElementById('selected-day');
+  var selectedDayTitle = document.getElementById('selected-day-title');
+  var selectedDayCards = document.getElementById('selected-day-cards');
+  var selectedDayEmpty = document.getElementById('selected-day-empty');
+  var selectedDayClose = document.getElementById('selected-day-close');
+  var allList = document.getElementById('all-list');
+  var allEmptyState = document.getElementById('all-empty-state');
+  var subtitle = document.getElementById('history-subtitle');
+
+  /* --- 底部导航 --- */
+  document.getElementById('tab-bar-mount').innerHTML = TC.tabBarHTML('history');
+
+  /* --- 图标 --- */
+  var IMAGE_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>';
+  var AUDIO_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>';
+  var CHEVRON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+  var TRASH_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+  var WEEK_LABELS = ['日', '一', '二', '三', '四', '五', '六'];
+
+  /* --- 状态 --- */
+  var viewYear, viewMonth;
+  var selectedDate = null;
+  var entriesByDate = {};
+
+  function getTodayStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + TC.pad2(d.getMonth() + 1) + '-' + TC.pad2(d.getDate());
+  }
+  var todayStr = getTodayStr();
+
+  /* --- 加载日记并建立日期索引 --- */
+  function loadEntries() {
+    var all = TC.readEntries();
+    all.sort(function (a, b) { return String(b.dateISO || '').localeCompare(String(a.dateISO || '')); });
+    entriesByDate = {};
+    all.forEach(function (e) {
+      var d = String(e.dateISO || '').slice(0, 10);
+      if (!d) { return; }
+      if (!entriesByDate[d]) { entriesByDate[d] = []; }
+      entriesByDate[d].push(e);
+    });
+    return all;
+  }
+
+  /* --- 渲染日历 --- */
+  function renderCalendar() {
+    calTitle.textContent = viewYear + '年' + (viewMonth + 1) + '月';
+
+    /* 本月日记计数 */
+    var prefix = viewYear + '-' + TC.pad2(viewMonth + 1);
+    var monthCount = 0;
+    for (var d in entriesByDate) {
+      if (d.indexOf(prefix) === 0) { monthCount += entriesByDate[d].length; }
+    }
+    calCount.textContent = monthCount > 0 ? '本月 ' + monthCount + ' 篇' : '本月暂无日记';
+
+    var firstDay = new Date(viewYear, viewMonth, 1);
+    var startWeekday = firstDay.getDay();
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    var prevDaysInMonth = new Date(viewYear, viewMonth, 0).getDate();
+
+    var html = '';
+    /* 星期标题行 */
+    for (var w = 0; w < 7; w++) {
+      html += '<div class="cal-weekday">' + WEEK_LABELS[w] + '</div>';
+    }
+
+    /* 上月尾部 */
+    for (var i = startWeekday - 1; i >= 0; i--) {
+      var day = prevDaysInMonth - i;
+      var prevMonth = viewMonth === 0 ? 11 : viewMonth - 1;
+      var prevYear = viewMonth === 0 ? viewYear - 1 : viewYear;
+      var ds = prevYear + '-' + TC.pad2(prevMonth + 1) + '-' + TC.pad2(day);
+      html += buildCell(day, ds, true);
+    }
+
+    /* 当月日期 */
+    for (var dd = 1; dd <= daysInMonth; dd++) {
+      var ds2 = viewYear + '-' + TC.pad2(viewMonth + 1) + '-' + TC.pad2(dd);
+      html += buildCell(dd, ds2, false);
+    }
+
+    /* 下月头部补齐网格 */
+    var cellsSoFar = startWeekday + daysInMonth;
+    var trailing = (7 - (cellsSoFar % 7)) % 7;
+    for (var t = 1; t <= trailing; t++) {
+      var nextMonth = viewMonth === 11 ? 0 : viewMonth + 1;
+      var nextYear = viewMonth === 11 ? viewYear + 1 : viewYear;
+      var ds3 = nextYear + '-' + TC.pad2(nextMonth + 1) + '-' + TC.pad2(t);
+      html += buildCell(t, ds3, true);
+    }
+
+    calGrid.innerHTML = html;
+  }
+
+  function buildCell(day, ds, isOtherMonth) {
+    var entries = entriesByDate[ds] || [];
+    var isToday = ds === todayStr;
+    var isSelected = ds === selectedDate;
+    var classes = 'cal-cell';
+    if (isOtherMonth) { classes += ' is-other-month'; }
+    if (isToday) { classes += ' is-today'; }
+    if (isSelected) { classes += ' is-selected'; }
+
+    var dotsHtml = '';
+    if (entries.length) {
+      dotsHtml = '<span class="cal-dots">';
+      var shown = entries.slice(0, 3);
+      for (var s = 0; s < shown.length; s++) {
+        var mood = shown[s].mood ? TC.MOOD_MAP[shown[s].mood] : null;
+        var color = mood ? mood.color : 'var(--brand-primary)';
+        dotsHtml += '<span class="cal-dot" style="background:' + color + '"></span>';
+      }
+      dotsHtml += '</span>';
+    }
+
+    var ariaLabel = TC.makeGroupTitle(ds) + (entries.length ? '，' + entries.length + ' 篇日记' : '，无日记');
+
+    return '<button type="button" class="' + classes + '" data-date="' + TC.escapeAttr(ds) + '" aria-label="' + TC.escapeAttr(ariaLabel) + '">' +
+      '<span class="cal-day">' + day + '</span>' +
+      dotsHtml +
+      '</button>';
+  }
+
+  /* --- 选中日期 → 显示当天日记 --- */
+  function selectDate(ds) {
+    selectedDate = ds;
+    renderCalendar();
+    renderSelectedDay();
+  }
+
+  function renderSelectedDay() {
+    if (!selectedDate) {
+      selectedDaySection.classList.add('is-hidden');
+      return;
+    }
+    selectedDaySection.classList.remove('is-hidden');
+    selectedDaySection.classList.add('fade-in-up');
+    selectedDayTitle.textContent = TC.makeGroupTitle(selectedDate);
+
+    var entries = entriesByDate[selectedDate] || [];
+    selectedDayCards.innerHTML = '';
+    if (entries.length === 0) {
+      selectedDayCards.classList.add('is-hidden');
+      selectedDayEmpty.classList.remove('is-hidden');
+    } else {
+      selectedDayCards.classList.remove('is-hidden');
+      selectedDayEmpty.classList.add('is-hidden');
+      for (var i = 0; i < entries.length; i++) {
+        selectedDayCards.appendChild(buildCard(entries[i]));
+      }
+    }
+
+    /* 平滑滚动到选中日期区域 */
+    try {
+      selectedDaySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) { /* ignore */ }
+  }
+
+  /* --- 全部日记列表（按日期分组） --- */
+  function renderAllEntries() {
+    var all = loadEntries();
+
+    var groupMap = {};
+    var groupOrder = [];
+    all.forEach(function (e) {
+      var d = String(e.dateISO || '').slice(0, 10) || '未知日期';
+      if (!groupMap[d]) { groupMap[d] = []; groupOrder.push(d); }
+      groupMap[d].push(e);
+    });
+
+    allList.innerHTML = '';
+    if (groupOrder.length === 0) {
+      allEmptyState.classList.remove('is-hidden');
+      if (subtitle) { subtitle.textContent = '共 0 篇日记 · 按日历浏览'; }
+      return;
+    }
+    allEmptyState.classList.add('is-hidden');
+
+    groupOrder.forEach(function (d) {
+      var g = document.createElement('section');
+      g.className = 'diary-group fade-in-up';
+      g.setAttribute('data-date', d);
+      var h = document.createElement('h2');
+      h.className = 'group-title';
+      h.textContent = TC.makeGroupTitle(d);
+      var cards = document.createElement('div');
+      cards.className = 'group-cards';
+      groupMap[d].forEach(function (e) { cards.appendChild(buildCard(e)); });
+      g.appendChild(h);
+      g.appendChild(cards);
+      allList.appendChild(g);
+    });
+
+    if (subtitle) { subtitle.textContent = '共 ' + all.length + ' 篇日记 · 按日历浏览'; }
+  }
+
+  /* --- 构建日记卡片（与列表页一致） --- */
+  function buildCard(e) {
+    var dateISO = String(e.dateISO || '');
+    var preview = TC.plainText(e.body || '');
+    var firstImg = (e.images && e.images.length && e.images[0].src) ? e.images[0].src : '';
+    var hasAudio = e.audios && e.audios.length > 0;
+    var mood = e.mood ? TC.MOOD_MAP[e.mood] : null;
+
+    var html = '';
+    html += '<a class="entry-card ios-card-raised" href="diary-editor.html" data-date="' + TC.escapeAttr(dateISO.slice(0, 10)) + '"';
+    html += ' data-title="' + TC.escapeAttr(e.title || '') + '"';
+    html += ' data-preview="' + TC.escapeAttr(preview) + '"';
+    html += ' data-key="' + TC.escapeAttr(dateISO) + '">';
+    if (firstImg) {
+      html += '<div class="entry-thumb"><img src="' + TC.escapeAttr(firstImg) + '" alt="' + TC.escapeAttr(e.title || '') + '" loading="lazy"></div>';
+    }
+    html += '<div class="entry-body">';
+    html += '<h3 class="entry-title">' + TC.escapeAttr(e.title || '') + '</h3>';
+    html += '<p class="entry-preview">' + TC.escapeAttr(preview) + '</p>';
+    html += '<div class="entry-meta">';
+    if (dateISO.length >= 16) { html += '<span class="meta-time">' + TC.escapeAttr(dateISO.slice(11, 16)) + '</span>'; }
+    html += '<span class="meta-pill weather">' + TC.weatherIcon(e.weather) + TC.escapeAttr(e.weather || '') + '</span>';
+    if (mood) { html += '<span class="meta-pill mood">' + mood.emoji + TC.escapeAttr(mood.label) + '</span>'; }
+    if (firstImg) { html += '<span class="meta-pill image">' + IMAGE_ICON + '图</span>'; }
+    if (hasAudio) { html += '<span class="meta-pill audio">' + AUDIO_ICON + '录音</span>'; }
+    html += '</div></div>';
+    html += '<span class="entry-arrow">' + CHEVRON_ICON + '</span>';
+    html += '<button type="button" class="entry-delete" data-action="delete-entry" title="删除日记" aria-label="删除日记">' + TRASH_ICON + '</button>';
+    html += '</a>';
+
+    var wrap = document.createElement('div');
+    wrap.innerHTML = html;
+    return wrap.firstChild;
+  }
+
+  /* --- 全局刷新 --- */
+  function refreshAll() {
+    renderAllEntries();
+    renderCalendar();
+    if (selectedDate) { renderSelectedDay(); }
+  }
+
+  /* --- 月份切换 --- */
+  prevBtn.addEventListener('click', function () {
+    viewMonth--;
+    if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+    renderCalendar();
+  });
+
+  nextBtn.addEventListener('click', function () {
+    viewMonth++;
+    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    renderCalendar();
+  });
+
+  todayBtn.addEventListener('click', function () {
+    var d = new Date();
+    viewYear = d.getFullYear();
+    viewMonth = d.getMonth();
+    renderCalendar();
+  });
+
+  /* --- 日历点击 --- */
+  calGrid.addEventListener('click', function (e) {
+    var cell = e.target && e.target.closest ? e.target.closest('.cal-cell') : null;
+    if (!cell || !calGrid.contains(cell)) { return; }
+    var ds = cell.getAttribute('data-date');
+    if (!ds) { return; }
+    /* 点击其他月份的日期 → 切换到该月 */
+    if (cell.classList.contains('is-other-month')) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ds);
+      if (m) {
+        viewYear = Number(m[1]);
+        viewMonth = Number(m[2]) - 1;
+      }
+    }
+    selectDate(ds);
+  });
+
+  /* --- 关闭选中日期 --- */
+  selectedDayClose.addEventListener('click', function () {
+    selectedDate = null;
+    selectedDaySection.classList.add('is-hidden');
+    renderCalendar();
+  });
+
+  /* --- 卡片点击与删除（事件委托） --- */
+  function closestCard(node) {
+    while (node && node !== document) {
+      if (node.getAttribute && node.getAttribute('data-key')) { return node; }
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  function bindCardEvents(container) {
+    container.addEventListener('click', function (e) {
+      var delBtn = e.target && e.target.closest ? e.target.closest('[data-action="delete-entry"]') : null;
+      if (delBtn && container.contains(delBtn)) {
+        e.preventDefault();
+        e.stopPropagation();
+        var delCard = delBtn.closest('.entry-card');
+        var delKey = delCard ? delCard.getAttribute('data-key') : '';
+        if (!delKey) { return; }
+        if (!window.confirm('确定删除这篇日记吗？删除后无法恢复。')) { return; }
+        TC.deleteEntry(delKey);
+        TC.showToast('日记已删除');
+        refreshAll();
+        return;
+      }
+      var card = closestCard(e.target);
+      if (!card) { return; }
+      if (e.metaKey || e.ctrlKey || e.shiftKey) { return; }
+      e.preventDefault();
+      var key = card.getAttribute('data-key') || '';
+      if (key) {
+        try { sessionStorage.setItem('timecapsule:opened-entry', JSON.stringify({ dateISO: key })); } catch (err) { /* ignore */ }
+      }
+      window.location.href = card.getAttribute('href') || 'diary-editor.html';
+    });
+  }
+
+  bindCardEvents(selectedDayCards);
+  bindCardEvents(allList);
+
+  /* --- 初始化 --- */
+  var now = new Date();
+  viewYear = now.getFullYear();
+  viewMonth = now.getMonth();
+  renderAllEntries();
+  renderCalendar();
+
+  /* --- 页面恢复时刷新 --- */
+  window.addEventListener('pageshow', function () { refreshAll(); });
+})();
+</script>
+</body>
+</html>

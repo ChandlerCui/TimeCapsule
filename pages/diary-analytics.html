@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>TimeCapsule · 心情分析</title>
+    <link rel="stylesheet" href="../css/theme.css">
+    <style>
+      /* --- 顶部应用栏 --- */
+      .app-bar {
+        position: sticky; top: 0; z-index: 50;
+        background: color-mix(in srgb, var(--brand-card) 85%, transparent);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        border-bottom: 1px solid var(--brand-border);
+      }
+      .app-bar-inner {
+        max-width: 980px; margin: 0 auto; padding: 0 24px; height: 60px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--brand-foreground); }
+      .brand-badge {
+        display: flex; align-items: center; justify-content: center;
+        width: 34px; height: 34px; border-radius: 10px;
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent-blue));
+        color: #fff; box-shadow: var(--brand-shadow-card);
+      }
+      .brand-badge svg { width: 18px; height: 18px; }
+      .brand-name { font-size: 17px; font-weight: 600; letter-spacing: 0.01em; }
+      .btn-new {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 18px; border-radius: 999px;
+        background: var(--brand-primary); color: #fff;
+        font-size: 14px; font-weight: 600; line-height: 1.2; text-decoration: none;
+        box-shadow: var(--brand-shadow-card);
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .btn-new:hover { background: var(--brand-primary-hover); }
+      .btn-new:active { transform: scale(0.96); }
+      .btn-new svg { width: 16px; height: 16px; }
+
+      /* --- 内容壳 --- */
+      .shell { max-width: 980px; margin: 0 auto; padding: 0 24px 100px; }
+
+      /* --- 页面标题 --- */
+      .page-head { display: flex; flex-direction: column; gap: 6px; margin: 28px 0 20px; }
+      .page-title { font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
+      .page-sub { font-size: 14px; color: var(--brand-ink-2); }
+
+      /* --- 统计概览卡片 --- */
+      .stats-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;
+      }
+      .stat-card {
+        display: flex; align-items: center; gap: 14px;
+        padding: 18px 16px;
+        background: var(--brand-card); border: 1px solid var(--brand-border);
+        border-radius: var(--brand-radius-lg); box-shadow: var(--brand-shadow-card);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+      .stat-card:hover { transform: translateY(-2px); box-shadow: var(--brand-shadow-soft); border-color: var(--brand-primary-soft-2); }
+      .stat-icon {
+        flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+        width: 44px; height: 44px; border-radius: 12px;
+        background: var(--brand-primary-soft); font-size: 22px; line-height: 1;
+      }
+      .stat-icon.blue { background: var(--brand-accent-blue-soft); }
+      .stat-icon.mood-icon-bg { background: var(--brand-accent-blue-soft); }
+      .stat-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+      .stat-value { font-size: 24px; font-weight: 700; line-height: 1.2; color: var(--brand-foreground); }
+      .stat-value.smaller { font-size: 17px; }
+      .stat-label { font-size: 12px; color: var(--brand-ink-2); line-height: 1.3; }
+
+      /* --- 通用卡片 --- */
+      .analytics-card {
+        background: var(--brand-card); border: 1px solid var(--brand-border);
+        border-radius: var(--brand-radius-lg); box-shadow: var(--brand-shadow-card);
+        padding: 22px; margin-bottom: 20px;
+      }
+      .card-head {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px;
+      }
+      .card-title { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; color: var(--brand-foreground); }
+      .card-title svg { width: 18px; height: 18px; color: var(--brand-primary); }
+
+      /* --- 分段切换 --- */
+      .seg { display: inline-flex; align-items: center; background: var(--brand-seg); border-radius: 999px; padding: 3px; }
+      .seg-btn {
+        border: 0; background: transparent; padding: 6px 14px; border-radius: 999px;
+        font-size: 13px; font-weight: 500; line-height: 1.2; color: var(--brand-ink-2);
+        cursor: pointer; font-family: inherit;
+        transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      }
+      .seg-btn:hover { color: var(--brand-foreground); }
+      .seg-btn:active { transform: scale(0.96); }
+      .seg-btn.is-active { background: var(--brand-card); color: var(--brand-primary); font-weight: 600; box-shadow: var(--brand-shadow-card); }
+
+      /* --- 折线图 --- */
+      .chart-canvas-wrap { width: 100%; }
+      #lineChart { width: 100%; height: 300px; display: block; }
+
+      /* --- 空状态 --- */
+      .chart-empty {
+        display: flex; flex-direction: column; align-items: center; gap: 8px;
+        padding: 40px 24px; text-align: center;
+      }
+      .chart-empty-icon {
+        display: flex; align-items: center; justify-content: center;
+        width: 48px; height: 48px; border-radius: 999px;
+        background: var(--brand-primary-soft); color: var(--brand-primary); margin-bottom: 4px;
+      }
+      .chart-empty-icon svg { width: 22px; height: 22px; }
+      .chart-empty-text { font-size: 14px; color: var(--brand-ink-2); }
+
+      /* --- 词云 --- */
+      .word-cloud {
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+        gap: 6px 14px; min-height: 120px; padding: 8px 4px;
+      }
+      .word-item {
+        display: inline-block; line-height: 1.5; cursor: default; user-select: none;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+      .word-item:hover { transform: scale(1.15); opacity: 1 !important; }
+
+      /* --- 饼图区域 --- */
+      .donut-section { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+      .donut-wrap { width: 220px; height: 220px; flex-shrink: 0; position: relative; }
+      #donutChart { width: 100%; height: 100%; display: block; }
+      .donut-legend { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 10px; }
+      .legend-item {
+        display: flex; align-items: center; gap: 10px; font-size: 14px;
+        padding: 6px 10px; border-radius: var(--brand-radius-sm);
+        transition: background 0.2s ease;
+      }
+      .legend-item:hover { background: var(--brand-muted); }
+      .legend-emoji { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+      .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+      .legend-label { color: var(--brand-foreground); flex: 1; }
+      .legend-count { color: var(--brand-ink-2); font-size: 13px; }
+      .legend-percent { color: var(--brand-ink-3); font-size: 13px; min-width: 42px; text-align: right; font-variant-numeric: tabular-nums; }
+
+      /* --- 页脚 --- */
+      .page-footer { margin-top: 40px; padding: 20px 0 8px; border-top: 1px solid var(--brand-border); text-align: center; }
+      .page-footer p { font-size: 13px; color: var(--brand-ink-3); }
+
+      /* --- 入场动画 --- */
+      .analytics-card, .stat-card { animation: fadeInUp 0.45s ease backwards; }
+      .stat-card:nth-child(1) { animation-delay: 0.05s; }
+      .stat-card:nth-child(2) { animation-delay: 0.10s; }
+      .stat-card:nth-child(3) { animation-delay: 0.15s; }
+      .stat-card:nth-child(4) { animation-delay: 0.20s; }
+
+      /* --- 响应式 --- */
+      @media (max-width: 767.98px) {
+        .app-bar-inner { padding: 0 16px; }
+        .shell { padding: 0 16px 100px; }
+        .page-title { font-size: 26px; }
+        .page-head { margin: 22px 0 16px; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .analytics-card { padding: 18px; }
+        .donut-section { flex-direction: column; align-items: center; gap: 20px; }
+        .donut-legend { width: 100%; }
+        .donut-wrap { width: 180px; height: 180px; }
+        #lineChart { height: 240px; }
+        .card-head { flex-wrap: wrap; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .stat-card, .analytics-card, .word-item, .btn-new, .seg-btn, .legend-item { transition: none; animation: none; }
+        .stat-card:hover, .word-item:hover { transform: none; }
+      }
+    </style>
+</head>
+<body>
+<main>
+    <header class="app-bar">
+        <div class="app-bar-inner">
+            <a href="diary-list.html" class="brand" aria-label="TimeCapsule 首页">
+                <span class="brand-badge"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
+                <span class="brand-name">TimeCapsule</span>
+            </a>
+            <a href="diary-editor.html?new=1" class="btn-new">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                <span>写日记</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="shell">
+        <!-- 页面标题 -->
+        <div class="page-head">
+            <h1 class="page-title">心情分析</h1>
+            <p class="page-sub" id="pageSub">载入中…</p>
+        </div>
+
+        <!-- 统计概览 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">总日记数</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue">📅</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statDays">0</div>
+                    <div class="stat-label">记录天数</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon mood-icon-bg" id="statMoodIcon">—</div>
+                <div class="stat-info">
+                    <div class="stat-value smaller" id="statMoodLabel">暂无</div>
+                    <div class="stat-label">最常心情</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue">📷</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statImages">0</div>
+                    <div class="stat-label">图片总数</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 情绪折线图 -->
+        <section class="analytics-card">
+            <div class="card-head">
+                <h2 class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    情绪趋势
+                </h2>
+                <div class="seg" id="rangeSeg">
+                    <button class="seg-btn is-active" data-range="recent">最近30天</button>
+                    <button class="seg-btn" data-range="all">全部</button>
+                </div>
+            </div>
+            <div class="chart-canvas-wrap" id="lineChartWrap">
+                <canvas id="lineChart"></canvas>
+            </div>
+            <div class="chart-empty" id="lineChartEmpty" style="display:none">
+                <div class="chart-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+                <div class="chart-empty-text">记录更多日记来查看情绪趋势</div>
+            </div>
+        </section>
+
+        <!-- 词云 -->
+        <section class="analytics-card">
+            <div class="card-head">
+                <h2 class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    词云
+                </h2>
+            </div>
+            <div class="word-cloud" id="wordCloud"></div>
+        </section>
+
+        <!-- 情绪占比饼图 -->
+        <section class="analytics-card">
+            <div class="card-head">
+                <h2 class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3"/><path d="M21 12C21 7.02944 16.9706 3 12 3"/><path d="M12 12L21 12"/></svg>
+                    情绪占比
+                </h2>
+            </div>
+            <div class="donut-section" id="donutSection">
+                <div class="donut-wrap">
+                    <canvas id="donutChart"></canvas>
+                </div>
+                <div class="donut-legend" id="donutLegend"></div>
+            </div>
+            <div class="chart-empty" id="donutEmpty" style="display:none">
+                <div class="chart-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3"/><path d="M21 12C21 7.02944 16.9706 3 12 3"/><path d="M12 12L21 12"/></svg></div>
+                <div class="chart-empty-text">开始写日记来查看分析</div>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <p>TimeCapsule · 记录每一个珍贵的瞬间</p>
+        </footer>
+    </div>
+
+    <div id="tabBar"></div>
+</main>
+
+<script src="../js/app.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* --- 情绪 → 数值映射 --- */
+  var MOOD_VALUE = {
+    happy: 7, calm: 6, grateful: 5, moved: 4,
+    tired: 3, anxious: 2, sad: 1, angry: 0
+  };
+  /* Y 轴从下到上（0 → 7）对应的 mood key */
+  var VALUE_ORDER = ['angry', 'sad', 'anxious', 'tired', 'moved', 'grateful', 'calm', 'happy'];
+
+  /* 词云配色：雾紫 / 淡蓝深浅交替 */
+  var WORD_COLORS = [
+    '#A593C7', '#9DBBD4', '#9480B8', '#7DA5C8',
+    '#B8A8D4', '#B0CFE0', '#C4B5D9', '#8FB8D9'
+  ];
+
+  var allEntries = [];
+  var currentRange = 'recent';
+
+  /* ===================== 初始化 ===================== */
+  function init() {
+    /* 底部导航 */
+    var tabBar = document.getElementById('tabBar');
+    if (typeof TC !== 'undefined' && TC.tabBarHTML) {
+      tabBar.innerHTML = TC.tabBarHTML('analytics');
+    }
+
+    /* 读取数据 */
+    if (typeof TC !== 'undefined' && TC.readEntries) {
+      allEntries = TC.readEntries() || [];
+    }
+
+    renderStats();
+    renderLineChart();
+    renderWordCloud();
+    renderDonutChart();
+
+    /* 时间范围切换 */
+    var seg = document.getElementById('rangeSeg');
+    seg.addEventListener('click', function (e) {
+      var btn = e.target.closest('.seg-btn');
+      if (!btn) return;
+      seg.querySelectorAll('.seg-btn').forEach(function (b) { b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      currentRange = btn.getAttribute('data-range');
+      renderLineChart();
+    });
+
+    /* 窗口缩放重绘 Canvas */
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        renderLineChart();
+        renderDonutChart();
+      }, 200);
+    });
+  }
+
+  /* ===================== 统计概览 ===================== */
+  function renderStats() {
+    var total = allEntries.length;
+    var dateSet = {};
+    allEntries.forEach(function (e) {
+      var d = (e.dateISO || '').slice(0, 10);
+      if (d) dateSet[d] = true;
+    });
+    var days = Object.keys(dateSet).length;
+
+    /* 最常出现的情绪 */
+    var moodCount = {};
+    allEntries.forEach(function (e) {
+      if (e.mood) moodCount[e.mood] = (moodCount[e.mood] || 0) + 1;
+    });
+    var topMood = null, topNum = 0;
+    Object.keys(moodCount).forEach(function (key) {
+      if (moodCount[key] > topNum) { topNum = moodCount[key]; topMood = key; }
+    });
+
+    /* 图片总数 */
+    var totalImages = 0;
+    allEntries.forEach(function (e) {
+      if (e.images && e.images.length) totalImages += e.images.length;
+    });
+
+    /* 写入 DOM */
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDays').textContent = days;
+    document.getElementById('statImages').textContent = totalImages;
+
+    var moodIconEl = document.getElementById('statMoodIcon');
+    var moodLabelEl = document.getElementById('statMoodLabel');
+    if (topMood && typeof TC !== 'undefined' && TC.MOOD_MAP && TC.MOOD_MAP[topMood]) {
+      moodIconEl.textContent = TC.MOOD_MAP[topMood].emoji;
+      moodLabelEl.textContent = TC.MOOD_MAP[topMood].label;
+    } else {
+      moodIconEl.textContent = '—';
+      moodLabelEl.textContent = '暂无';
+    }
+
+    /* 副标题 */
+    var sub = document.getElementById('pageSub');
+    if (total === 0) {
+      sub.textContent = '还没有日记记录，开始写下第一篇吧';
+    } else {
+      var sortedDates = Object.keys(dateSet).sort();
+      var first = sortedDates[0];
+      var last = sortedDates[sortedDates.length - 1];
+      var range = first === last ? fmtDate(first) : fmtDate(first) + ' ～ ' + fmtDate(last);
+      sub.textContent = '共 ' + total + ' 篇日记 · 记录 ' + days + ' 天 · ' + range;
+    }
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var p = iso.split('-');
+    return p.length >= 3 ? (p[1] + '/' + p[2]) : iso;
+  }
+
+  /* ===================== 情绪折线图 ===================== */
+  function getLinePoints() {
+    var entries = allEntries.slice().sort(function (a, b) {
+      return (a.dateISO || '').localeCompare(b.dateISO || '');
+    });
+    if (currentRange === 'recent') {
+      var cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 30);
+      var filtered = entries.filter(function (e) {
+        return new Date(e.dateISO) >= cutoff;
+      });
+      /* 如果过滤后不足 2 条但总数 ≥ 2，回退到全部 */
+      if (filtered.length >= 2) entries = filtered;
+    }
+    return entries.map(function (e) {
+      return {
+        date: e.dateISO,
+        mood: e.mood,
+        value: MOOD_VALUE[e.mood] !== undefined ? MOOD_VALUE[e.mood] : 4
+      };
+    });
+  }
+
+  function setupCanvas(canvas) {
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return null;
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx: ctx, W: rect.width, H: rect.height };
+  }
+
+  function renderLineChart() {
+    var canvas = document.getElementById('lineChart');
+    var wrap = document.getElementById('lineChartWrap');
+    var empty = document.getElementById('lineChartEmpty');
+    var points = getLinePoints();
+
+    if (points.length < 2) {
+      wrap.style.display = 'none';
+      empty.style.display = 'flex';
+      return;
+    }
+    wrap.style.display = 'block';
+    empty.style.display = 'none';
+
+    var setup = setupCanvas(canvas);
+    if (!setup) return;
+    var ctx = setup.ctx, W = setup.W, H = setup.H;
+
+    var padL = 50, padR = 16, padT = 18, padB = 38;
+    var chartW = W - padL - padR;
+    var chartH = H - padT - padB;
+
+    ctx.clearRect(0, 0, W, H);
+
+    /* 网格线 + Y 轴情绪标签 */
+    for (var v = 0; v <= 7; v++) {
+      var y = padT + chartH - (v / 7) * chartH;
+      ctx.strokeStyle = 'rgba(165, 147, 199, 0.07)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(W - padR, y);
+      ctx.stroke();
+
+      var moodKey = VALUE_ORDER[v];
+      if (TC.MOOD_MAP && TC.MOOD_MAP[moodKey]) {
+        ctx.fillStyle = 'rgba(139, 132, 153, 0.65)';
+        ctx.font = '14px ' + getComputedStyle(document.body).fontFamily;
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(TC.MOOD_MAP[moodKey].emoji, padL - 8, y);
+      }
+    }
+
+    /* 数据点坐标 */
+    var coords = points.map(function (p, i) {
+      var x = padL + (points.length === 1 ? chartW / 2 : (i / (points.length - 1)) * chartW);
+      var y = padT + chartH - (p.value / 7) * chartH;
+      return { x: x, y: y, point: p };
+    });
+
+    /* 填充区域 */
+    ctx.beginPath();
+    ctx.moveTo(coords[0].x, coords[0].y);
+    for (var i = 1; i < coords.length; i++) {
+      var prev = coords[i - 1], curr = coords[i];
+      var midX = (prev.x + curr.x) / 2;
+      ctx.quadraticCurveTo(prev.x, prev.y, midX, (prev.y + curr.y) / 2);
+    }
+    ctx.lineTo(coords[coords.length - 1].x, coords[coords.length - 1].y);
+    ctx.lineTo(coords[coords.length - 1].x, padT + chartH);
+    ctx.lineTo(coords[0].x, padT + chartH);
+    ctx.closePath();
+    var grad = ctx.createLinearGradient(0, padT, 0, padT + chartH);
+    grad.addColorStop(0, 'rgba(165, 147, 199, 0.18)');
+    grad.addColorStop(1, 'rgba(165, 147, 199, 0)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    /* 折线 */
+    ctx.beginPath();
+    ctx.moveTo(coords[0].x, coords[0].y);
+    for (var j = 1; j < coords.length; j++) {
+      var pv = coords[j - 1], cu = coords[j];
+      var mx = (pv.x + cu.x) / 2;
+      ctx.quadraticCurveTo(pv.x, pv.y, mx, (pv.y + cu.y) / 2);
+    }
+    ctx.lineTo(coords[coords.length - 1].x, coords[coords.length - 1].y);
+    ctx.strokeStyle = 'rgba(165, 147, 199, 0.55)';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    /* 数据点 */
+    coords.forEach(function (c) {
+      var moodObj = TC.MOOD_MAP && TC.MOOD_MAP[c.point.mood];
+      var color = moodObj ? moodObj.color : '#A593C7';
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+
+    /* X 轴日期标签 */
+    var step = Math.max(1, Math.ceil(coords.length / 7));
+    ctx.fillStyle = 'rgba(139, 132, 153, 0.55)';
+    ctx.font = '11px ' + getComputedStyle(document.body).fontFamily;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    coords.forEach(function (c, i) {
+      if (i % step === 0 || i === coords.length - 1) {
+        var ds = (c.point.date || '').slice(5, 10).replace('-', '/');
+        ctx.fillText(ds, c.x, padT + chartH + 10);
+      }
+    });
+  }
+
+  /* ===================== 词云 ===================== */
+  function renderWordCloud() {
+    var container = document.getElementById('wordCloud');
+
+    if (!allEntries.length || typeof TC === 'undefined' || !TC.extractKeywords) {
+      container.innerHTML = makeEmptyCloud();
+      return;
+    }
+
+    var keywords = TC.extractKeywords(allEntries);
+    if (!keywords || keywords.length === 0) {
+      container.innerHTML = makeEmptyCloud();
+      return;
+    }
+
+    var maxC = keywords[0].count;
+    var minC = keywords[keywords.length - 1].count;
+    var range = maxC - minC || 1;
+
+    /* 随机打乱顺序，避免高频词总在同一侧 */
+    var shuffled = keywords.slice();
+    for (var i = shuffled.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+    }
+    /* 限制最多 40 个词 */
+    if (shuffled.length > 40) shuffled = shuffled.slice(0, 40);
+
+    var html = shuffled.map(function (kw, idx) {
+      var ratio = (kw.count - minC) / range;
+      var size = Math.round(14 + ratio * (36 - 14));
+      var color = WORD_COLORS[idx % WORD_COLORS.length];
+      var opacity = (0.72 + ratio * 0.28).toFixed(2);
+      var weight = ratio > 0.55 ? 600 : (ratio > 0.25 ? 500 : 400);
+      return '<span class="word-item" style="font-size:' + size + 'px;color:' + color +
+        ';opacity:' + opacity + ';font-weight:' + weight + '">' +
+        escapeHtml(kw.word) + '</span>';
+    }).join('');
+
+    container.innerHTML = html;
+  }
+
+  function makeEmptyCloud() {
+    return '<div class="chart-empty" style="width:100%">' +
+      '<div class="chart-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>' +
+      '<div class="chart-empty-text">写更多日记来生成词云</div></div>';
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* ===================== 情绪占比饼图 ===================== */
+  function renderDonutChart() {
+    var canvas = document.getElementById('donutChart');
+    var legendEl = document.getElementById('donutLegend');
+    var emptyEl = document.getElementById('donutEmpty');
+    var section = document.getElementById('donutSection');
+
+    if (!allEntries.length) {
+      section.style.display = 'none';
+      emptyEl.style.display = 'flex';
+      return;
+    }
+
+    /* 统计各情绪出现次数 */
+    var moodCount = {};
+    allEntries.forEach(function (e) {
+      if (e.mood) moodCount[e.mood] = (moodCount[e.mood] || 0) + 1;
+    });
+
+    var moodData = [];
+    if (typeof TC !== 'undefined' && TC.MOODS) {
+      TC.MOODS.forEach(function (m) {
+        if (moodCount[m.key]) {
+          moodData.push({ key: m.key, label: m.label, emoji: m.emoji, color: m.color, count: moodCount[m.key] });
+        }
+      });
+    }
+
+    var total = moodData.reduce(function (s, d) { return s + d.count; }, 0);
+    if (total === 0) {
+      section.style.display = 'none';
+      emptyEl.style.display = 'flex';
+      return;
+    }
+
+    section.style.display = '';
+    emptyEl.style.display = 'none';
+
+    /* 绘制环形图 */
+    var setup = setupCanvas(canvas);
+    if (setup) {
+      var ctx = setup.ctx, W = setup.W, H = setup.H;
+      var cx = W / 2, cy = H / 2;
+      var outerR = Math.min(W, H) / 2 - 6;
+      var innerR = outerR * 0.64;
+
+      ctx.clearRect(0, 0, W, H);
+
+      var startAngle = -Math.PI / 2;
+      moodData.forEach(function (d) {
+        var angle = (d.count / total) * Math.PI * 2;
+        var isFull = angle >= Math.PI * 2 - 0.001;
+
+        ctx.beginPath();
+        if (isFull) {
+          /* 单一情绪 100% 时画完整环（even-odd 填充） */
+          ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+          ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+          ctx.fillStyle = d.color;
+          ctx.fill('evenodd');
+        } else {
+          ctx.arc(cx, cy, outerR, startAngle, startAngle + angle);
+          ctx.arc(cx, cy, innerR, startAngle + angle, startAngle, true);
+          ctx.closePath();
+          ctx.fillStyle = d.color;
+          ctx.fill();
+          /* 白色间隙 */
+          ctx.strokeStyle = '#FEFCFA';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+        startAngle += angle;
+      });
+
+      /* 中心文字 */
+      ctx.fillStyle = '#3D3744';
+      ctx.font = 'bold 30px ' + getComputedStyle(document.body).fontFamily;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(total), cx, cy - 8);
+      ctx.fillStyle = 'rgba(139, 132, 153, 0.6)';
+      ctx.font = '12px ' + getComputedStyle(document.body).fontFamily;
+      ctx.fillText('篇日记', cx, cy + 14);
+    }
+
+    /* 图例 */
+    var lh = moodData.map(function (d) {
+      var pct = ((d.count / total) * 100).toFixed(1);
+      return '<div class="legend-item">' +
+        '<span class="legend-emoji">' + d.emoji + '</span>' +
+        '<span class="legend-dot" style="background:' + d.color + '"></span>' +
+        '<span class="legend-label">' + d.label + '</span>' +
+        '<span class="legend-count">' + d.count + ' 次</span>' +
+        '<span class="legend-percent">' + pct + '%</span>' +
+        '</div>';
+    }).join('');
+    legendEl.innerHTML = lh;
+  }
+
+  /* ===================== 启动 ===================== */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
