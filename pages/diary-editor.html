@@ -242,6 +242,80 @@
       }
       .btn-primary:hover { background: var(--brand-primary-hover); }
       .btn-primary:active { transform: scale(0.96); }
+      .btn-export {
+        display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+        color: var(--brand-primary); border-color: color-mix(in srgb, var(--brand-primary) 36%, var(--brand-border));
+      }
+      .btn-export svg { width: 16px; height: 16px; }
+      .btn-export:hover { background: var(--brand-primary-soft); }
+      .btn-export:disabled { opacity: 0.6; cursor: wait; transform: none; }
+
+      /* --- PDF 导出排版（A4 · 794px 画布，供 html2pdf 渲染） --- */
+      #pdf-export-root {
+        position: absolute; top: 0; left: 0; z-index: -1;
+        width: 794px; background: #ffffff;
+        opacity: 0; pointer-events: none;
+      }
+      .pdf-doc {
+        width: 794px; box-sizing: border-box; padding: 46px 52px 40px;
+        background: #ffffff; color: #2d2836;
+        font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .pdf-brand { display: block; margin-bottom: 34px; font-size: 11px; letter-spacing: 1.5px; color: #8e82a8; }
+      .pdf-brand b { font-weight: 700; color: #7a6ba0; }
+      .pdf-brand span { float: right; color: #b1a9c2; letter-spacing: 0.5px; }
+      .pdf-title {
+        margin: 0 0 14px; font-size: 27px; line-height: 1.4; font-weight: 700; color: #241f2e;
+        word-break: break-word;
+      }
+      .pdf-meta { display: block; font-size: 12.5px; line-height: 1.6; color: #8b8398; }
+      .pdf-meta i {
+        display: inline-block; font-style: normal; margin-right: 14px; white-space: nowrap;
+      }
+      .pdf-rule {
+        height: 3px; margin: 20px 0 24px; border-radius: 2px;
+        background: linear-gradient(90deg, #b8a9d4 0%, #d9c8ea 55%, #f0cfd8 100%);
+      }
+      .pdf-body { font-size: 15px; line-height: 1.95; color: #3a3444; word-break: break-word; }
+      .pdf-body p { margin: 0 0 14px; }
+      .pdf-body p:last-child { margin-bottom: 0; }
+      .pdf-body b, .pdf-body strong { font-weight: 700; color: #241f2e; }
+      .pdf-body i, .pdf-body em { font-style: italic; }
+      .pdf-body ul, .pdf-body ol { margin: 0 0 14px; padding-left: 26px; }
+      .pdf-body li { margin-bottom: 6px; }
+      .pdf-body img { display: block; max-width: 100%; margin: 10px 0 14px; border-radius: 10px; }
+      .pdf-img-card { margin: 20px 0 22px; page-break-inside: avoid; break-inside: avoid; }
+      .pdf-img-wrap {
+        text-align: center; overflow: hidden; border-radius: 12px; background: #f6f3f9;
+        line-height: 0;
+      }
+      .pdf-img-wrap img {
+        display: inline-block; max-width: 100%; max-height: 500px; border-radius: 12px;
+      }
+      .pdf-img-wrap img.rot-90 { transform: rotate(90deg); max-width: 62%; }
+      .pdf-img-wrap img.rot-180 { transform: rotate(180deg); }
+      .pdf-img-wrap img.rot-270 { transform: rotate(270deg); max-width: 62%; }
+      .pdf-img-cap { margin-top: 9px; font-size: 12px; line-height: 1.6; color: #a39bb4; text-align: center; }
+      .pdf-audios { margin-top: 22px; }
+      .pdf-audio-card {
+        display: inline-block; margin: 0 8px 8px 0; padding: 8px 16px;
+        border: 1px solid #e6def2; border-radius: 999px; background: #faf8fd;
+        font-size: 12px; color: #7a6ba0; page-break-inside: avoid; break-inside: avoid;
+      }
+      .pdf-foot {
+        margin-top: 34px; padding-top: 14px; border-top: 1px solid #efeaf6;
+        font-size: 11px; color: #b8b1c6; text-align: center; letter-spacing: 0.5px;
+      }
+
+      /* --- 打印回退：屏幕隐藏，仅打印时输出排版节点 --- */
+      #pdf-export-root.pdf-print-mode { display: none; }
+      @media print {
+        body > main { display: none !important; }
+        body { background: #fff !important; }
+        #pdf-export-root { display: block !important; position: static !important; left: 0 !important; z-index: auto !important; }
+        .pdf-doc { width: 100%; padding: 0; }
+      }
 
       /* --- 页脚 --- */
       .page-footer { margin-top: 34px; padding: 0 16px 40px; text-align: center; }
@@ -340,6 +414,10 @@
         <div class="action-bar">
             <button type="button" class="btn-delete" id="delete-entry">删除日记</button>
             <div class="action-bar-right">
+                <button type="button" class="btn-secondary btn-export" id="export-pdf" aria-label="导出为 PDF 文件">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                    <span id="export-label">导出 PDF</span>
+                </button>
                 <button type="button" class="btn-secondary" id="cancel-entry">取消</button>
                 <button type="button" class="btn-primary" id="save-bottom">保存</button>
             </div>
@@ -755,6 +833,189 @@
   }
 
   saveBtns.forEach(function (btn) { btn.addEventListener('click', saveEntry); });
+
+  /* --- 导出 PDF --- */
+  var exportBtn = $('#export-pdf');
+  var exportLabel = $('#export-label');
+  var exportingPdf = false;
+  var WEATHER_EMOJI = { '晴': '☀️', '多云': '⛅', '阴': '☁️', '小雨': '🌧️', '阵雨': '🌦️', '雷阵雨': '⛈️', '雪': '❄️', '大风': '💨', '雾': '🌫️' };
+
+  function sanitizeName(s) {
+    return String(s || '').replace(/[\\/:*?"<>|\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 40);
+  }
+
+  /* 构建 A4 排版节点（离屏挂载，供 html2pdf 渲染） */
+  function buildPdfNode(entry) {
+    var mood = TC.MOOD_MAP[entry.mood] || TC.MOOD_MAP.calm;
+    var timeMatch = /T(\d{2}:\d{2})/.exec(entry.dateISO || '');
+    var timeStr = timeMatch ? ' ' + timeMatch[1] : '';
+    var now = new Date();
+    var exportStamp = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
+
+    var html = '<div class="pdf-doc">';
+    html += '<div class="pdf-brand"><b>TimeCapsule · 时光胶囊</b><span>导出于 ' + exportStamp + '</span></div>';
+    html += '<h1 class="pdf-title">' + TC.escapeAttr(entry.title || '无题') + '</h1>';
+    html += '<div class="pdf-meta">' +
+      '<i>📅 ' + TC.escapeAttr(entry.date || '') + timeStr + '</i>' +
+      '<i>' + (WEATHER_EMOJI[entry.weather] || '☁️') + ' ' + TC.escapeAttr(entry.weather || '') + '</i>' +
+      '<i>' + mood.emoji + ' ' + mood.label + '</i>' +
+      '</div>';
+    html += '<div class="pdf-rule"></div>';
+    html += '<div class="pdf-body">' + (entry.body || '') + '</div>';
+
+    (entry.images || []).forEach(function (im) {
+      if (!im || !im.src) { return; }
+      var rot = ((im.rotate || 0) % 4 + 4) % 4;
+      var rotCls = rot === 1 ? ' rot-90' : (rot === 2 ? ' rot-180' : (rot === 3 ? ' rot-270' : ''));
+      html += '<div class="pdf-img-card">' +
+        '<div class="pdf-img-wrap"><img src="' + im.src + '" alt="日记图片"' + rotCls + '></div>' +
+        (im.caption ? '<div class="pdf-img-cap">' + TC.escapeAttr(im.caption) + '</div>' : '') +
+        '</div>';
+    });
+
+    if ((entry.audios || []).length) {
+      html += '<div class="pdf-audios">';
+      (entry.audios || []).forEach(function (au) {
+        if (!au || !au.name) { return; }
+        html += '<span class="pdf-audio-card">♪ ' + TC.escapeAttr(au.name) + '</span>';
+      });
+      html += '</div>';
+    }
+
+    html += '<div class="pdf-foot">由 TimeCapsule 记录 · 数据仅保存在本机浏览器</div>';
+    html += '</div>';
+
+    var root = document.createElement('div');
+    root.id = 'pdf-export-root';
+    root.innerHTML = html;
+    return root;
+  }
+
+  /* 等待节点内图片全部加载完成（8 秒超时保护） */
+  function waitForImages(node, cb) {
+    var imgs = Array.prototype.slice.call(node.querySelectorAll('img'));
+    if (!imgs.length) { cb(); return; }
+    var left = imgs.length;
+    var done = false;
+    function finish() { if (!done) { done = true; cb(); } }
+    var timer = setTimeout(finish, 8000);
+    function check() { left--; if (left <= 0) { clearTimeout(timer); finish(); } }
+    imgs.forEach(function (img) {
+      if (img.complete && img.naturalWidth > 0) { check(); }
+      else {
+        img.addEventListener('load', check);
+        img.addEventListener('error', check);
+      }
+    });
+  }
+
+  /* 按需加载本地 vendor 的 html2pdf（零外网依赖，12 秒超时） */
+  var pdfLibState = 'idle';
+  function loadPdfLib(cb) {
+    if (window.html2pdf) { pdfLibState = 'ok'; cb(true); return; }
+    var settled = false;
+    var script = document.createElement('script');
+    script.src = '../js/vendor/html2pdf.bundle.min.js';
+    var timer = setTimeout(function () {
+      if (!settled) { settled = true; pdfLibState = 'error'; cb(false); }
+    }, 12000);
+    script.onload = function () {
+      if (settled) { return; }
+      settled = true; clearTimeout(timer);
+      pdfLibState = window.html2pdf ? 'ok' : 'error';
+      cb(pdfLibState === 'ok');
+    };
+    script.onerror = function () {
+      if (settled) { return; }
+      settled = true; clearTimeout(timer); pdfLibState = 'error'; cb(false);
+    };
+    document.head.appendChild(script);
+  }
+
+  function finishExport(node, msg) {
+    if (node && node.parentNode) { node.parentNode.removeChild(node); }
+    exportingPdf = false;
+    exportBtn.disabled = false;
+    exportLabel.textContent = '导出 PDF';
+    if (savedScrollY !== null) { window.scrollTo(0, savedScrollY); savedScrollY = null; }
+    if (msg) { TC.showToast(msg); }
+  }
+
+  /* 主路径：html2pdf 一键生成并下载 */
+  var savedScrollY = null;
+  function runPdfExport(node, entry, onDone, onFail) {
+    var fname = '时光胶囊_' + String(entry.dateISO || '').slice(0, 10) + '_' + (sanitizeName(entry.title) || '日记') + '.pdf';
+    try {
+      /* html2canvas 渲染受页面滚动位置影响，先回到顶部，结束后在 finishExport 恢复 */
+      savedScrollY = window.scrollY || window.pageYOffset || 0;
+      if (savedScrollY > 0) { window.scrollTo(0, 0); }
+      html2pdf().set({
+        margin: 0,
+        filename: fname,
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: {
+          scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false,
+          onclone: function (clonedDoc) {
+            var r = clonedDoc.querySelector('#pdf-export-root');
+            if (r) {
+              r.style.opacity = '1';
+              r.style.position = 'static';
+              r.style.zIndex = 'auto';
+              r.style.pointerEvents = 'auto';
+            }
+          }
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+        pagebreak: { mode: ['css', 'legacy'], avoid: ['.pdf-img-card', '.pdf-audio-card', '.pdf-title', '.pdf-rule'] }
+      }).from(node.querySelector('.pdf-doc')).save().then(function () {
+        onDone();
+      }).catch(function () {
+        onFail();
+      });
+    } catch (err) {
+      onFail();
+    }
+  }
+
+  /* 回退路径：系统打印面板（选「存储为 PDF」） */
+  function printFallback(node) {
+    node.classList.add('pdf-print-mode');
+    TC.showToast('已切换打印导出，请在面板选择「存储为 PDF」');
+    setTimeout(function () {
+      window.print();
+      finishExport(node, '在打印面板选择「存储为 PDF」即可保存');
+    }, 400);
+  }
+
+  exportBtn.addEventListener('click', function () {
+    if (exportingPdf) { return; }
+    var entry = collectEntry();
+    if (!entry.title && !TC.plainText(entry.body)) {
+      TC.showToast('先写点什么，再导出 PDF 吧');
+      return;
+    }
+    exportingPdf = true;
+    exportBtn.disabled = true;
+    exportLabel.textContent = '生成中…';
+    TC.showToast('正在排版生成 PDF…');
+
+    var node = buildPdfNode(entry);
+    document.body.appendChild(node);
+
+    waitForImages(node, function () {
+      loadPdfLib(function (ok) {
+        if (ok) {
+          runPdfExport(node, entry, function () {
+            finishExport(node, 'PDF 已生成，正在保存到本地');
+          }, function () {
+            printFallback(node);
+          });
+        } else {
+          printFallback(node);
+        }
+      });
+    });
+  });
 
   /* --- 返回 / 取消 / 删除 --- */
   backBtn.addEventListener('click', function () {
