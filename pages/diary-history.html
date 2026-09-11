@@ -243,10 +243,15 @@
                 <span class="brand-badge"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
                 <span class="brand-name">TimeCapsule</span>
             </a>
-            <a href="diary-editor.html?new=1" class="btn-new">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                <span>写日记</span>
-            </a>
+            <div class="app-bar-actions">
+                <a href="diary-editor.html?new=1" class="btn-new">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                    <span>写日记</span>
+                </a>
+                <button type="button" class="btn-theme" id="btn-theme" aria-label="切换深浅主题" title="切换深浅主题">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -307,6 +312,15 @@
     <div id="tab-bar-mount"></div>
 </main>
 <script src="../js/app.js"></script>
+<script>
+/* 主题切换 */
+TC.initTheme();
+(function () {
+  var themeBtn = document.getElementById('btn-theme');
+  if (themeBtn) { themeBtn.addEventListener('click', function () { TC.toggleTheme(); }); }
+})();
+</script>
+
 <script>
 (function () {
   'use strict';
@@ -619,10 +633,19 @@
         var delCard = delBtn.closest('.entry-card');
         var delKey = delCard ? delCard.getAttribute('data-key') : '';
         if (!delKey) { return; }
-        if (!window.confirm('确定删除这篇日记吗？删除后无法恢复。')) { return; }
-        TC.deleteEntry(delKey);
-        TC.showToast('日记已删除');
-        refreshAll();
+        var delTitle = delCard.getAttribute('data-title') || '这篇日记';
+        TC.confirmDialog({
+          title: '删除这篇日记？',
+          desc: '「' + delTitle + '」删除后无法恢复，是否继续？',
+          confirmText: '删除',
+          cancelText: '取消',
+          danger: true
+        }).then(function (ok) {
+          if (!ok) { return; }
+          TC.deleteEntry(delKey);
+          TC.showToast('日记已删除');
+          refreshAll();
+        });
         return;
       }
       var card = closestCard(e.target);

@@ -256,6 +256,145 @@
     return arr.slice(0, 50);
   }
 
+  /* --- 主题切换（深色/浅色） --- */
+  var THEME_KEY = 'timecapsule-theme';
+  function applyTheme(theme) {
+    var root = document.documentElement;
+    if (theme === 'dark') { root.classList.add('dark'); } else { root.classList.remove('dark'); }
+    try { localStorage.setItem(THEME_KEY, theme); } catch (err) { /* ignore */ }
+  }
+  function initTheme() {
+    var saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (err) { /* ignore */ }
+    /* 未设置时跟随系统 */
+    var theme = saved ||
+      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(theme);
+    return theme;
+  }
+  function toggleTheme() {
+    var isDark = document.documentElement.classList.contains('dark');
+    var next = isDark ? 'light' : 'dark';
+    applyTheme(next);
+    return next;
+  }
+
+  /* --- 数据备份 / 恢复 --- */
+  var BACKUP_META_KEY = 'timecapsule-backup-meta';
+
+  function exportBackup() {
+    var payload = {
+      app: 'TimeCapsule',
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      entries: readEntries()
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var d = new Date();
+    var fname = 'TimeCapsule备份_' +
+      d.getFullYear() + '-' + TC.pad2(d.getMonth() + 1) + '-' + TC.pad2(d.getDate()) + '.json';
+    a.href = url; a.download = fname;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function restoreBackup(file, cb) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var payload = JSON.parse(reader.result);
+        var entries = Array.isArray(payload) ? payload :
+          (Array.isArray(payload.entries) ? payload.entries : null);
+        if (!entries) { cb(false, '文件格式无法识别（不是 TimeCapsule 备份）'); return; }
+        /* 简单校验条目关键字段 */
+        var ok = true;
+        entries.forEach(function (e) {
+          if (!e || typeof e.dateISO !== 'string') { ok = false; }
+        });
+        if (!ok) { cb(false, '备份内容似乎不是有效的日记数据'); return; }
+        writeEntries(entries);
+        try { localStorage.setItem(SEED_FLAG, '1'); } catch (err) { /* ignore */ }
+        cb(true, '已恢复 ' + entries.length + ' 篇日记');
+      } catch (err) {
+        cb(false, '备份文件解析失败：' + (err && err.message ? err.message : '格式错误'));
+      }
+    };
+    reader.onerror = function () { cb(false, '读取文件失败'); };
+    reader.readAsText(file);
+  }
+
+  function backupMeta() {
+    var list = readEntries();
+    var withText = 0, withImages = 0, withAudio = 0;
+    list.forEach(function (e) {
+      if (TC.plainText(e.body || '')) withText++;
+      if (e.images && e.images.length) withImages++;
+      if (e.audios && e.audios.length) withAudio++;
+    });
+    return { total: list.length, withText: withText, withImages: withImages, withAudio: withAudio };
+  }
+
+  /* --- 确认弹层（Modal），替代 window.confirm --- */
+  var modalEl = null;
+  var DANGER_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+  var INFO_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>';
+
+  /* 返回 Promise<boolean>，resolve(true) 表示用户点确定 */
+  function confirmDialog(opts) {
+    var o = opts || {};
+    var title = o.title || '确认操作';
+    var desc = o.desc || '';
+    var confirmText = o.confirmText || '确定';
+    var cancelText = o.cancelText || '取消';
+    var isDanger = !!o.danger;
+
+    if (!modalEl) {
+      modalEl = document.createElement('div');
+      modalEl.className = 'modal-overlay';
+      modalEl.setAttribute('role', 'alertdialog');
+      modalEl.setAttribute('aria-modal', 'true');
+      document.body.appendChild(modalEl);
+    }
+    modalEl.innerHTML =
+      '<div class="modal">' +
+        '<div class="modal-icon' + (isDanger ? ' danger' : '') + '">' + (isDanger ? DANGER_ICON : INFO_ICON) + '</div>' +
+        '<div class="modal-title">' + TC.escapeAttr(title) + '</div>' +
+        (desc ? '<div class="modal-desc">' + TC.escapeAttr(desc) + '</div>' : '') +
+        '<div class="modal-actions">' +
+          '<button type="button" class="modal-btn-cancel" data-act="cancel">' + TC.escapeAttr(cancelText) + '</button>' +
+          '<button type="button" class="modal-btn-confirm' + (isDanger ? ' modal-btn-danger' : '') + '" data-act="confirm">' + TC.escapeAttr(confirmText) + '</button>' +
+        '</div>' +
+      '</div>';
+
+    modalEl.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+
+    return new Promise(function (resolve) {
+      function close(result) {
+        modalEl.classList.remove('is-open');
+        document.body.style.overflow = '';
+        modalEl.removeEventListener('click', handler);
+        modalEl.removeEventListener('keydown', keyHandler);
+        resolve(result);
+      }
+      function handler(e) {
+        var btn = e.target && e.target.closest ? e.target.closest('[data-act]') : null;
+        if (!btn) { if (e.target === modalEl) { close(false); } return; }
+        close(btn.getAttribute('data-act') === 'confirm');
+      }
+      function keyHandler(e) {
+        if (e.key === 'Escape') { close(false); }
+        else if (e.key === 'Enter') { close(true); }
+      }
+      modalEl.addEventListener('click', handler);
+      modalEl.addEventListener('keydown', keyHandler);
+      var confirmBtn = modalEl.querySelector('[data-act="confirm"]');
+      if (confirmBtn) { setTimeout(function () { confirmBtn.focus(); }, 30); }
+    });
+  }
+
   /* --- 导出 --- */
   global.TC = {
     STORAGE_KEY: STORAGE_KEY,
@@ -277,7 +416,14 @@
     makeGroupTitle: makeGroupTitle,
     tabBarHTML: tabBarHTML,
     showToast: showToast,
-    extractKeywords: extractKeywords
+    extractKeywords: extractKeywords,
+    initTheme: initTheme,
+    applyTheme: applyTheme,
+    toggleTheme: toggleTheme,
+    exportBackup: exportBackup,
+    restoreBackup: restoreBackup,
+    backupMeta: backupMeta,
+    confirmDialog: confirmDialog
   };
 
   /* --- 页面加载时自动种子 --- */

@@ -18,7 +18,9 @@
         max-width: 980px; margin: 0 auto; padding: 0 24px; height: 60px;
         display: flex; align-items: center; justify-content: space-between; gap: 16px;
       }
+      .app-bar-brandrow { display: flex; align-items: center; gap: 10px; }
       .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--brand-foreground); }
+      .app-bar-actions { display: flex; align-items: center; gap: 10px; }
       .brand-badge {
         display: flex; align-items: center; justify-content: center;
         width: 34px; height: 34px; border-radius: 10px;
@@ -46,6 +48,20 @@
       .page-head { display: flex; flex-direction: column; gap: 6px; margin: 28px 0 20px; }
       .page-title { font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
       .page-sub { font-size: 14px; color: var(--brand-ink-2); }
+
+      /* --- 概览 + 备份 --- */
+      .stats-row { display: flex; gap: 10px; flex-wrap: wrap; margin: -6px 0 18px; }
+      .backup-bar { display: flex; gap: 10px; margin-bottom: 18px; }
+      .backup-btn {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 9px 16px; border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); color: var(--brand-ink-2);
+        font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit;
+        transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+      }
+      .backup-btn:hover { background: var(--brand-primary-soft); color: var(--brand-primary); border-color: var(--brand-primary-soft-2); }
+      .backup-btn:active { transform: scale(0.96); }
+      .backup-btn svg { width: 16px; height: 16px; }
 
       /* --- 工具条 --- */
       .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
@@ -124,6 +140,19 @@
       .entry-card:hover .entry-delete { opacity: 1; }
       .entry-delete:hover { background: rgba(229, 57, 53, 0.08); color: rgba(229, 57, 53, 1); border-color: rgba(229, 57, 53, 0.35); }
       .entry-delete svg { width: 15px; height: 15px; }
+      .entry-action {
+        position: absolute; top: 10px; right: 46px; z-index: 2;
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; padding: 0;
+        border: 1px solid var(--brand-border); border-radius: 999px;
+        background: var(--brand-card); color: var(--brand-ink-2);
+        cursor: pointer; opacity: 0;
+        transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+      }
+      .entry-card:hover .entry-action { opacity: 1; }
+      .entry-action:hover { background: var(--brand-primary-soft); color: var(--brand-primary); border-color: var(--brand-primary-soft-2); }
+      .entry-action.is-pinned { opacity: 1; color: var(--brand-primary); background: var(--brand-primary-soft); }
+      .entry-action svg { width: 15px; height: 15px; }
 
       /* --- 空状态 --- */
       .empty-state {
@@ -153,6 +182,7 @@
         .entry-thumb { width: 68px; height: 68px; }
         .entry-card { padding: 12px; gap: 12px; }
         .entry-delete { opacity: 1; top: 8px; right: 8px; width: 28px; height: 28px; }
+        .entry-action { opacity: 1; top: 8px; right: 44px; width: 28px; height: 28px; }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -169,10 +199,15 @@
                 <span class="brand-badge"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
                 <span class="brand-name">TimeCapsule</span>
             </a>
-            <a href="diary-editor.html?new=1" class="btn-new">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                <span>写日记</span>
-            </a>
+            <div class="app-bar-actions">
+                <a href="diary-editor.html?new=1" class="btn-new">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                    <span>写日记</span>
+                </a>
+                <button type="button" class="btn-theme" id="btn-theme" aria-label="切换深浅主题" title="切换深浅主题">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -180,6 +215,25 @@
         <section class="page-head">
             <h1 class="page-title">我的日记</h1>
             <p class="page-sub" id="list-subtitle">共 0 篇日记 · 最新优先</p>
+        </section>
+
+        <!-- 概览卡片 -->
+        <section class="stats-row" id="stats-row" aria-label="记录概览" style="display:none">
+            <div class="stat-pill"><span class="ico">📝</span><span class="num" id="stat-total">0</span><span class="lbl">篇</span></div>
+            <div class="stat-pill"><span class="ico">🔥</span><span class="num" id="stat-streak">0</span><span class="lbl">连续天数</span></div>
+            <div class="stat-pill"><span class="ico">📅</span><span class="num" id="stat-month">0</span><span class="lbl">本月</span></div>
+        </section>
+
+        <!-- 备份/恢复 -->
+        <section class="backup-bar" aria-label="数据备份">
+            <button type="button" class="backup-btn" id="btn-export-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                <span>备份全部</span>
+            </button>
+            <button type="button" class="backup-btn" id="btn-restore-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                <span>恢复备份</span>
+            </button>
         </section>
 
         <section class="toolbar" aria-label="搜索与排序">
@@ -217,6 +271,7 @@
 
     <div id="tab-bar-mount"></div>
 </main>
+<input type="file" id="restore-input" accept="application/json,.json" hidden>
 <script src="../js/app.js"></script>
 <script>
 (function () {
@@ -233,6 +288,13 @@
   var groups = [];
   var totalEntries = 0;
 
+  /* 主题 */
+  var theme = TC.initTheme();
+  var themeBtn = document.getElementById('btn-theme');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function () { TC.toggleTheme(); });
+  }
+
   /* 底部导航 */
   document.getElementById('tab-bar-mount').innerHTML = TC.tabBarHTML('list');
 
@@ -240,42 +302,158 @@
   var AUDIO_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>';
   var CHEVRON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
   var TRASH_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+  var PIN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>';
 
   function renderEntries() {
     var all = TC.readEntries();
-    all.sort(function (a, b) { return String(b.dateISO || '').localeCompare(String(a.dateISO || '')); });
+
+    /* 置顶排序：pinned 优先，其余按时间倒序 */
+    all.sort(function (a, b) {
+      var pa = a.pinned ? 1 : 0, pb = b.pinned ? 1 : 0;
+      if (pa !== pb) { return pb - pa; }
+      return String(b.dateISO || '').localeCompare(String(a.dateISO || ''));
+    });
+
+    /* 前置置顶区与按月份分组 */
+    var pinned = all.filter(function (e) { return e.pinned; });
+    var normal = all.filter(function (e) { return !e.pinned; });
 
     var groupMap = {};
-    var groupOrder = [];
-    all.forEach(function (e) {
+    var groupDateOrder = [];
+    normal.forEach(function (e) {
       var d = String(e.dateISO || '').slice(0, 10) || '未知日期';
-      if (!groupMap[d]) { groupMap[d] = []; groupOrder.push(d); }
+      if (!groupMap[d]) { groupMap[d] = []; groupDateOrder.push(d); }
       groupMap[d].push(e);
     });
+    groupDateOrder.sort().reverse();
 
     list.innerHTML = '';
-    groupOrder.forEach(function (d) {
-      var g = document.createElement('section');
-      g.className = 'diary-group fade-in-up';
-      g.setAttribute('data-date', d);
-      var h = document.createElement('h2');
-      h.className = 'group-title';
-      h.textContent = TC.makeGroupTitle(d);
-      var cards = document.createElement('div');
-      cards.className = 'group-cards';
-      groupMap[d].forEach(function (e) { cards.appendChild(buildCard(e)); });
-      g.appendChild(h);
-      g.appendChild(cards);
-      list.appendChild(g);
+
+    totalEntries = all.length;
+
+    /* 置顶区 */
+    if (pinned.length) {
+      var pinSection = document.createElement('section');
+      pinSection.className = 'diary-group fade-in-up';
+      var pinHead = document.createElement('h2');
+      pinHead.className = 'group-title';
+      pinHead.textContent = '📌 置顶';
+      pinHead.style.marginTop = '4px';
+      var pinCards = document.createElement('div');
+      pinCards.className = 'group-cards';
+      pinned.forEach(function (e) { pinCards.appendChild(buildCard(e)); });
+      pinSection.appendChild(pinHead);
+      pinSection.appendChild(pinCards);
+      list.appendChild(pinSection);
+    }
+
+    /* 按年份折叠分组 */
+    var yearData = {};
+    groupDateOrder.forEach(function (d) {
+      var yr = String(d).slice(0, 4) || '未知';
+      if (!yearData[yr]) { yearData[yr] = []; }
+      yearData[yr].push(d);
+    });
+    var years = Object.keys(yearData).sort().reverse();
+
+    years.forEach(function (yr, yi) {
+      var set = [];
+      var yearCount = 0;
+      yearData[yr].forEach(function (d) {
+        groupMap[d].forEach(function (e) { yearCount++; });
+        set.push({ date: d, entries: groupMap[d] });
+      });
+
+      var block = document.createElement('section');
+      block.className = 'year-block fade-in-up';
+      block.setAttribute('data-year', yr);
+
+      var head = document.createElement('button');
+      head.type = 'button';
+      head.className = 'year-head';
+      head.setAttribute('aria-expanded', 'true');
+      var headHtml = '<span class="year-title">' + yr + ' 年<span>' + yearCount + ' 篇</span></span>';
+      headHtml += '<span class="year-chevr"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>';
+      head.innerHTML = headHtml;
+      block.appendChild(head);
+
+      var groupsWrap = document.createElement('div');
+      groupsWrap.className = 'year-groups';
+      set.forEach(function (item) {
+        var g = document.createElement('section');
+        g.className = 'diary-group';
+        var h = document.createElement('h3');
+        h.className = 'group-title';
+        h.textContent = TC.makeGroupTitle(item.date);
+        var cards = document.createElement('div');
+        cards.className = 'group-cards';
+        item.entries.forEach(function (e) { cards.appendChild(buildCard(e)); });
+        g.appendChild(h);
+        g.appendChild(cards);
+        groupsWrap.appendChild(g);
+      });
+      block.appendChild(groupsWrap);
+      list.appendChild(block);
+
+      /* 年份折叠交互 */
+      head.addEventListener('click', function () {
+        block.classList.toggle('is-collapsed');
+        head.setAttribute('aria-expanded', block.classList.contains('is-collapsed') ? 'false' : 'true');
+        if (!block.classList.contains('is-collapsed')) {
+          groupsWrap.style.maxHeight = groupsWrap.scrollHeight + 'px';
+        }
+      });
+      /* 初始展开当年，折叠更早年份 */
+      if (yi > 0) {
+        block.classList.add('is-collapsed');
+        head.setAttribute('aria-expanded', 'false');
+      }
     });
 
-    groups = [];
-    var groupEls = list.querySelectorAll('.diary-group');
-    for (var i = 0; i < groupEls.length; i++) { groups.push(groupEls[i]); }
-    totalEntries = list.querySelectorAll('.entry-card').length;
+    groups = Array.prototype.slice.call(list.querySelectorAll('.year-groups .group-cards'));
 
-    if (subtitle) { subtitle.textContent = '共 ' + totalEntries + ' 篇日记 · 最新优先'; }
+    if (subtitle) { subtitle.textContent = '共 ' + totalEntries + ' 篇日记'; }
     if (listEmptyState) { listEmptyState.classList.toggle('is-hidden', totalEntries > 0); }
+    renderStats();
+  }
+
+  function renderStats() {
+    var all = TC.readEntries();
+    var row = document.getElementById('stats-row');
+    if (!row) { return; }
+    if (!all.length) { row.style.display = 'none'; return; }
+    row.style.display = 'flex';
+
+    document.getElementById('stat-total').textContent = all.length;
+
+    /* 连续记录天数（含今天，往前数） */
+    var dateSet = {};
+    all.forEach(function (e) {
+      var d = String(e.dateISO || '').slice(0, 10);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d)) { dateSet[d] = true; }
+    });
+    var streak = 0;
+    var cur = new Date();
+    /* 若今天没记录，则从昨天开始算连续 */
+    while (dateSet[cur.getFullYear() + '-' + TC.pad2(cur.getMonth() + 1) + '-' + TC.pad2(cur.getDate())]) {
+      streak++;
+      cur.setDate(cur.getDate() - 1);
+    }
+    if (streak === 0) {
+      cur = new Date();
+      cur.setDate(cur.getDate() - 1);
+      while (dateSet[cur.getFullYear() + '-' + TC.pad2(cur.getMonth() + 1) + '-' + TC.pad2(cur.getDate())]) {
+        streak++;
+        cur.setDate(cur.getDate() - 1);
+      }
+    }
+    document.getElementById('stat-streak').textContent = streak;
+
+    /* 本月篇数 */
+    var now = new Date();
+    var ym = now.getFullYear() + '-' + TC.pad2(now.getMonth() + 1);
+    var monthCount = Object.keys(dateSet).filter(function (d) { return d.indexOf(ym) === 0; }).length;
+    document.getElementById('stat-month').textContent = monthCount;
   }
 
   function buildCard(e) {
@@ -302,8 +480,13 @@
     if (mood) { html += '<span class="meta-pill mood">' + mood.emoji + TC.escapeAttr(mood.label) + '</span>'; }
     if (firstImg) { html += '<span class="meta-pill image">' + IMAGE_ICON + '图</span>'; }
     if (hasAudio) { html += '<span class="meta-pill audio">' + AUDIO_ICON + '录音</span>'; }
+    var tags = (e.tags && e.tags.length) ? e.tags : [];
+    for (var ti = 0; ti < tags.length; ti++) {
+      if (tags[ti]) { html += '<span class="tag-pill">#' + TC.escapeAttr(tags[ti]) + '</span>'; }
+    }
     html += '</div></div>';
     html += '<span class="entry-arrow">' + CHEVRON_ICON + '</span>';
+    html += '<button type="button" class="entry-action' + (e.pinned ? ' is-pinned' : '') + '" data-action="toggle-pin" title="置顶/取消置顶" aria-label="置顶">' + PIN_ICON + '</button>';
     html += '<button type="button" class="entry-delete" data-action="delete-entry" title="删除日记" aria-label="删除日记">' + TRASH_ICON + '</button>';
     html += '</a>';
 
@@ -314,6 +497,45 @@
 
   /* 首次渲染 */
   renderEntries();
+
+  /* 备份 / 恢复 */
+  var exportAllBtn = document.getElementById('btn-export-all');
+  var restoreAllBtn = document.getElementById('btn-restore-all');
+  var restoreInput = document.getElementById('restore-input');
+
+  if (exportAllBtn) {
+    exportAllBtn.addEventListener('click', function () {
+      var m = TC.backupMeta();
+      if (m.total === 0) { TC.showToast('还没有日记可备份'); return; }
+      TC.exportBackup();
+      TC.showToast('正在保存备份文件…');
+    });
+  }
+  if (restoreAllBtn) {
+    restoreAllBtn.addEventListener('click', function () {
+      var m = TC.backupMeta();
+      TC.confirmDialog({
+        title: '恢复备份',
+        desc: '恢复会用备份文件覆盖当前全部日记' + (m.total ? '（当前 ' + m.total + ' 篇）' : '') + '。确定继续吗？',
+        confirmText: '选择文件',
+        cancelText: '取消',
+        danger: true
+      }).then(function (ok) {
+        if (ok && restoreInput) { restoreInput.click(); }
+      });
+    });
+  }
+  if (restoreInput) {
+    restoreInput.addEventListener('change', function () {
+      var file = (restoreInput.files || [])[0];
+      if (!file) { return; }
+      TC.restoreBackup(file, function (ok, msg) {
+        TC.showToast(msg || (ok ? '恢复成功' : '恢复失败'));
+        if (ok) { renderEntries(); }
+      });
+      restoreInput.value = '';
+    });
+  }
 
   /* 页面恢复时刷新 */
   window.addEventListener('pageshow', function () { renderEntries(); });
@@ -363,17 +585,17 @@
     TC.showToast('已清空搜索条件');
   });
 
-  /* 排序 */
+  /* 排序：重新渲染（年份折叠结构下按年份方向调整，最早/最新优先切换） */
+  var globalOrder = 'desc';
   function sortGroups(order) {
-    var sorted = groups.slice();
-    sorted.sort(function (a, b) {
-      var da = a.getAttribute('data-date') || '';
-      var db = b.getAttribute('data-date') || '';
-      var r = da < db ? -1 : (da > db ? 1 : 0);
-      return order === 'asc' ? r : -r;
-    });
-    for (var k = 0; k < sorted.length; k++) { list.appendChild(sorted[k]); }
-    if (subtitle) { subtitle.textContent = '共 ' + totalEntries + ' 篇日记 · ' + (order === 'asc' ? '最早优先' : '最新优先'); }
+    globalOrder = order;
+    /* 通过逆转年份展开顺序实现：desc=最新在前，asc=最早在前 */
+    var blocks = Array.prototype.slice.call(list.querySelectorAll('.year-block'));
+    var pinned = list.querySelector('.diary-group'); /* 置顶区保持首部 */
+    blocks.forEach(function (b) { list.removeChild(b); });
+    blocks.reverse();
+    blocks.forEach(function (b) { list.appendChild(b); });
+    if (subtitle) { subtitle.textContent = '共 ' + totalEntries + ' 篇日记'; }
   }
 
   for (var i = 0; i < segBtns.length; i++) {
@@ -405,12 +627,41 @@
       var delCard = delBtn.closest('.entry-card');
       var delKey = delCard ? delCard.getAttribute('data-key') : '';
       if (!delKey) { return; }
-      if (!window.confirm('确定删除这篇日记吗？删除后无法恢复。')) { return; }
-      TC.deleteEntry(delKey);
-      TC.showToast('日记已删除');
+      var delTitle = delCard.getAttribute('data-title') || '这篇日记';
+      TC.confirmDialog({
+        title: '删除这篇日记？',
+        desc: '「' + delTitle + '」删除后无法恢复，是否继续？',
+        confirmText: '删除',
+        cancelText: '取消',
+        danger: true
+      }).then(function (ok) {
+        if (!ok) { return; }
+        TC.deleteEntry(delKey);
+        TC.showToast('日记已删除');
+        renderEntries();
+      });
+      return;
+    }
+
+    var pinBtn = e.target && e.target.closest ? e.target.closest('[data-action="toggle-pin"]') : null;
+    if (pinBtn && list.contains(pinBtn)) {
+      e.preventDefault();
+      e.stopPropagation();
+      var pinCard = pinBtn.closest('.entry-card');
+      var pinKey = pinCard ? pinCard.getAttribute('data-key') : '';
+      if (!pinKey) { return; }
+      var entry = TC.findEntry(pinKey);
+      if (!entry) { return; }
+      entry.pinned = !entry.pinned;
+      TC.saveEntry(entry);
+      TC.showToast(entry.pinned ? '已置顶' : '已取消置顶');
       renderEntries();
       return;
     }
+
+    /* 置顶卡片标记样式 */
+    Array.prototype.forEach.call(list.querySelectorAll('.entry-action.is-pinned'), function (b) { });
+
     var card = closestCard(e.target);
     if (!card) { return; }
     if (e.metaKey || e.ctrlKey || e.shiftKey) { return; }

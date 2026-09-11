@@ -88,6 +88,18 @@
       }
       .editor-title::placeholder { color: var(--brand-ink-3); }
 
+      /* --- 标签输入 --- */
+      .tag-input-row { margin-top: 6px; }
+      .editor-tags {
+        display: block; width: 100%; padding: 4px 0;
+        border: 0; background: transparent; font-size: 13px;
+        color: var(--brand-ink-2); outline: none;
+      }
+      .editor-tags::placeholder { color: var(--brand-ink-3); }
+
+      /* --- 字数统计 --- */
+      .editor-wordcount { margin-top: 8px; text-align: right; font-size: 12px; color: var(--brand-ink-3); font-variant-numeric: tabular-nums; }
+
       /* --- 格式工具条 --- */
       .format-toolbar {
         display: flex; align-items: center; gap: 2px; margin-top: 12px; padding: 4px;
@@ -110,6 +122,16 @@
       .editor-body:empty::before {
         content: attr(data-placeholder); display: block; color: var(--brand-ink-3); pointer-events: none;
       }
+      .editor-body h3 { margin: 14px 0 8px; font-size: 18px; font-weight: 700; color: var(--brand-foreground); line-height: 1.4; }
+      .editor-body blockquote {
+        margin: 10px 0; padding: 8px 14px;
+        border-left: 3px solid var(--brand-primary);
+        background: var(--brand-primary-soft);
+        border-radius: 0 var(--brand-radius-sm) var(--brand-radius-sm) 0;
+        color: var(--brand-ink-2);
+      }
+      .editor-body ul, .editor-body ol { margin: 8px 0; padding-left: 24px; }
+      .editor-body img { display: block; max-width: 100%; margin: 8px 0; border-radius: var(--brand-radius-md); }
 
       /* --- 图片卡片区 --- */
       .image-cards { display: grid; gap: 18px; margin-top: 20px; }
@@ -349,7 +371,12 @@
                 <span>返回</span>
             </button>
             <span class="app-bar-brand">TimeCapsule</span>
-            <button type="button" class="app-bar-save" id="save-top" aria-label="保存日记">保存</button>
+            <div class="app-bar-actions">
+                <button type="button" class="btn-theme" id="btn-theme" aria-label="切换深浅主题" title="切换深浅主题">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+                <button type="button" class="app-bar-save" id="save-top" aria-label="保存日记">保存</button>
+            </div>
         </div>
     </header>
 
@@ -378,14 +405,22 @@
 
             <input id="editor-title" class="editor-title" type="text" placeholder="标题" aria-label="日记标题" autocomplete="off">
 
+            <div class="tag-input-row">
+                <input id="editor-tags" class="editor-tags" type="text" placeholder="添加标签，用逗号分隔（如：工作, 心情, 旅行）" aria-label="日记标签" autocomplete="off">
+            </div>
+
             <div class="format-toolbar" role="toolbar" aria-label="文本格式工具">
                 <button type="button" data-fmt="bold" title="加粗" aria-label="加粗"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
                 <button type="button" data-fmt="italic" title="斜体" aria-label="斜体"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/></svg></button>
                 <button type="button" data-fmt="list" title="列表" aria-label="列表"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/></svg></button>
+                <button type="button" data-fmt="h2" title="小标题" aria-label="小标题"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6v12"/><path d="M4 12h7"/><path d="M11 6v12"/><path d="M15 6h5"/><path d="M20 6v12"/><path d="M15 12h5"/></svg></button>
+                <button type="button" data-fmt="quote" title="引用" aria-label="引用"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></button>
                 <button type="button" data-fmt="image" title="插入图片" aria-label="插入图片"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></button>
             </div>
 
             <div id="editor-body" class="editor-body" contenteditable="true" data-placeholder="写点什么吧…" aria-label="日记正文"></div>
+
+            <div class="editor-wordcount"><span id="word-count">0 字</span></div>
 
             <hr class="divider-h editor-divider">
 
@@ -417,6 +452,10 @@
                 <button type="button" class="btn-secondary btn-export" id="export-pdf" aria-label="导出为 PDF 文件">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
                     <span id="export-label">导出 PDF</span>
+                </button>
+                <button type="button" class="btn-secondary btn-export" id="share-image" aria-label="分享图片">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/></svg>
+                    <span>分享图片</span>
                 </button>
                 <button type="button" class="btn-secondary" id="cancel-entry">取消</button>
                 <button type="button" class="btn-primary" id="save-bottom">保存</button>
@@ -463,6 +502,95 @@
   var moodKey = 'calm';
   var pendingInsert = 'cards';
 
+  /* --- 主题 --- */
+  TC.initTheme();
+  var themeBtn = $('#btn-theme');
+  if (themeBtn) { themeBtn.addEventListener('click', function () { TC.toggleTheme(); }); }
+
+  /* --- 标签 --- */
+  var tagsInput = $('#editor-tags');
+
+  /* --- 字数统计 --- */
+  var wordCountEl = $('#word-count');
+  function updateWordCount() {
+    if (!wordCountEl) { return; }
+    var text = bodyEditable.innerText || '';
+    var words = text.replace(/\s+/g, '').length;
+    wordCountEl.textContent = words + ' 字';
+  }
+
+  /* --- 草稿自动保存 --- */
+  var DRAFT_KEY = 'timecapsule-draft';
+  function currentDraftId() {
+    return isNew ? 'new' : (dateISO || '');
+  }
+  function clearDraft() {
+    try { localStorage.removeItem(DRAFT_KEY + ':' + currentDraftId()); } catch (err) { /* ignore */ }
+    try { localStorage.removeItem(DRAFT_KEY + ':' + '_meta'); } catch (err) { /* ignore */ }
+  }
+
+  function readDraft() {
+    if (!dateISO) { return null; }
+    try { return JSON.parse(localStorage.getItem(DRAFT_KEY + ':' + currentDraftId()) || 'null'); } catch (err) { return null; }
+  }
+
+  function saveDraft() {
+    if (!dateISO) { return; }
+    try {
+      var draft = {
+        title: titleInput.value,
+        body: bodyEditable.innerHTML,
+        weather: weatherLabel,
+        mood: moodKey,
+        tags: tagsInput.value,
+        savedAt: Date.now()
+      };
+      localStorage.setItem(DRAFT_KEY + ':' + currentDraftId(), JSON.stringify(draft));
+      localStorage.setItem(DRAFT_KEY + ':' + '_meta', JSON.stringify({ id: currentDraftId(), savedAt: draft.savedAt }));
+    } catch (err) { /* ignore */ }
+  }
+
+  function restoreDraft() {
+    var d = readDraft();
+    if (!d) { return; }
+    if (d.title != null) { titleInput.value = d.title; }
+    if (d.body != null) { bodyEditable.innerHTML = d.body; }
+    if (d.tags != null) { tagsInput.value = d.tags; }
+    if (d.weather) {
+      weatherLabel = d.weather;
+      weatherBtns.forEach(function (b) {
+        b.classList.remove('seg-active');
+        b.setAttribute('aria-checked', 'false');
+        if (b.getAttribute('data-weather') === d.weather) { b.classList.add('seg-active'); b.setAttribute('aria-checked', 'true'); }
+      });
+    }
+    if (d.mood) {
+      moodKey = d.mood;
+      moodSeg.querySelectorAll('.mood-chip').forEach(function (c) {
+        c.classList.remove('seg-active');
+        c.style.background = '';
+        c.setAttribute('aria-checked', 'false');
+        if (c.getAttribute('data-mood') === moodKey) {
+          c.classList.add('seg-active');
+          var m = TC.MOOD_MAP[moodKey];
+          if (m) { c.style.background = m.color; }
+          c.setAttribute('aria-checked', 'true');
+        }
+      });
+    }
+    updateWordCount();
+  }
+
+  /* 整理标签：逗号/空格分隔、去重、去空 */
+  function parseTags(str) {
+    var arr = String(str || '').split(/[,，]/).map(function (t) { return t.trim(); });
+    var seen = {}, out = [];
+    arr.forEach(function (t) {
+      if (t && !seen[t]) { seen[t] = true; out.push(t); }
+    });
+    return out;
+  }
+
   /* --- 渲染情绪选择器 --- */
   TC.MOODS.forEach(function (m) {
     var chip = document.createElement('button');
@@ -483,6 +611,7 @@
       chip.classList.add('seg-active');
       chip.style.background = m.color;
       chip.setAttribute('aria-checked', 'true');
+      saveDraft();
     });
     moodSeg.appendChild(chip);
   });
@@ -527,11 +656,16 @@
       (full.audios || []).forEach(function (au) {
         if (au && au.src) { audioCards.appendChild(createAudioCard(au.src, au.name || '录音', au.duration || 0)); }
       });
+      if (Array.isArray(full.tags)) { tagsInput.value = full.tags.join(', '); }
     }
   }
 
   if (!dateISO) { dateISO = TC.makeNowISO(); }
   dateEl.textContent = TC.makeLabel(dateISO);
+
+  /* 恢复上次未保存的草稿 */
+  restoreDraft();
+  updateWordCount();
 
   /* --- 天气选择 --- */
   weatherBtns.forEach(function (btn) {
@@ -539,13 +673,24 @@
       weatherLabel = btn.getAttribute('data-weather') || '晴';
       weatherBtns.forEach(function (b) { b.classList.remove('seg-active'); b.setAttribute('aria-checked', 'false'); });
       btn.classList.add('seg-active'); btn.setAttribute('aria-checked', 'true');
+      saveDraft();
     });
   });
 
   /* --- 正文 --- */
   bodyEditable.addEventListener('input', function () {
     if (bodyEditable.innerText.trim() === '') { bodyEditable.innerHTML = ''; }
+    updateWordCount();
+    saveDraft();
   });
+
+  /* --- 标题 / 标签 自动保存 --- */
+  titleInput.addEventListener('input', saveDraft);
+  tagsInput.addEventListener('input', saveDraft);
+
+  /* --- 关闭/离开时兜底保存草稿 --- */
+  window.addEventListener('beforeunload', saveDraft);
+  window.addEventListener('pagehide', saveDraft);
 
   /* --- 格式工具条 --- */
   toolbarBtns.forEach(function (btn) {
@@ -555,8 +700,11 @@
       var fmt = btn.getAttribute('data-fmt');
       if (fmt === 'bold') { document.execCommand('bold'); }
       else if (fmt === 'italic') { document.execCommand('italic'); }
+      else if (fmt === 'h2') { document.execCommand('formatBlock', false, 'h3'); }
+      else if (fmt === 'quote') { document.execCommand('formatBlock', false, 'blockquote'); }
       else if (fmt === 'list') { document.execCommand('insertUnorderedList'); }
       else if (fmt === 'image') { pendingInsert = 'inline'; imageInput.click(); }
+      saveDraft();
     });
   });
 
@@ -808,6 +956,7 @@
       mood: moodKey,
       title: titleInput.value.trim(),
       body: bodyEditable.innerHTML.trim(),
+      tags: parseTags(tagsInput.value),
       images: images,
       audios: audios
     };
@@ -821,6 +970,7 @@
     }
     try {
       TC.saveEntry(entry);
+      clearDraft();
       TC.showToast('已保存');
       setTimeout(function () { window.location.href = 'diary-list.html'; }, 500);
     } catch (err) {
@@ -1027,11 +1177,145 @@
   });
 
   deleteBtn.addEventListener('click', function () {
-    if (!window.confirm('确定删除这篇日记吗？删除后无法恢复。')) { return; }
-    TC.deleteEntry(dateISO);
-    TC.showToast('日记已删除');
-    setTimeout(function () { window.location.href = 'diary-list.html'; }, 500);
+    TC.confirmDialog({
+      title: '删除这篇日记？',
+      desc: '删除后无法恢复，是否继续？',
+      confirmText: '删除',
+      cancelText: '取消',
+      danger: true
+    }).then(function (ok) {
+      if (!ok) { return; }
+      TC.deleteEntry(dateISO);
+      clearDraft();
+      TC.showToast('日记已删除');
+      setTimeout(function () { window.location.href = 'diary-list.html'; }, 500);
+    });
   });
+
+  /* --- 分享图片（生成卡片并下载 PNG） --- */
+  var shareImageBtn = $('#share-image');
+  var WEATHER_EMOJI2 = { '晴': '☀️', '多云': '⛅', '阴': '☁️', '小雨': '🌧️', '阵雨': '🌦️', '雷阵雨': '⛈️', '雪': '❄️', '大风': '💨', '雾': '🌫️' };
+
+  /* 简易画布文字换行 */
+  function wrapText(ctx, text, maxWidth) {
+    var lines = [];
+    var line = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (ch === '\n') { lines.push(line); line = ''; continue; }
+      var test = line + ch;
+      if (ctx.measureText(test).width > maxWidth && line !== '') {
+        lines.push(line);
+        line = ch;
+      } else {
+        line = test;
+      }
+    }
+    if (line) { lines.push(line); }
+    return lines;
+  }
+
+  function buildShareCard(entry) {
+    var W = 1080, H = 1440;
+    var pad = 76;
+    var canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    var ctx = canvas.getContext('2d');
+
+    /* 背景渐变 */
+    var mood = TC.MOOD_MAP[entry.mood] || null;
+    var base = mood ? mood.color : '#A593C7';
+    var grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, base);
+    grad.addColorStop(0.55, '#3D3744');
+    grad.addColorStop(1, '#241F2E');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    /* 品牌头 */
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    ctx.font = '600 30px -apple-system, "PingFang SC", "Helvetica Neue", sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('TimeCapsule · 时光胶囊', pad, 90);
+
+    /* 日期 + 天气 + 心情 */
+    ctx.fillStyle = 'rgba(255,255,255,0.78)';
+    ctx.font = '400 30px -apple-system, "PingFang SC", sans-serif';
+    var metaStr = (entry.date || '') +
+      (entry.weather ? ('  ·  ' + (WEATHER_EMOJI2[entry.weather] || '') + ' ' + entry.weather) : '') +
+      (mood ? ('  ·  ' + mood.emoji) : '');
+    ctx.fillText(metaStr, pad, 155);
+
+    /* 标题 */
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 56px -apple-system, "PingFang SC", sans-serif';
+    var title = entry.title || '无题';
+    var titleLines = wrapText(ctx, title, W - pad * 2);
+    var ty = 250;
+    titleLines.slice(0, 4).forEach(function (l) {
+      ctx.fillText(l, pad, ty);
+      ty += 72;
+    });
+
+    /* 分割线 */
+    var ruleY = ty + 20;
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(pad, ruleY);
+    ctx.lineTo(W - pad, ruleY);
+    ctx.stroke();
+
+    /* 正文（最多 18 行） */
+    ctx.fillStyle = 'rgba(255,255,255,0.94)';
+    ctx.font = '400 34px/1.65 -apple-system, "PingFang SC", sans-serif';
+    ctx.font = '400 34px -apple-system, "PingFang SC", sans-serif';
+    var plain = TC.plainText(entry.body || '');
+    var bodyLines = wrapText(ctx, plain, W - pad * 2);
+    var by = ruleY + 68;
+    var maxLines = 18;
+    var count = 0;
+    bodyLines.slice(0, maxLines).forEach(function (l) { ctx.fillText(l, pad, by); by += 56; count++; });
+    if (bodyLines.length > maxLines) { ctx.fillText('…', pad, by); }
+
+    /* 标签 */
+    if (entry.tags && entry.tags.length) {
+      var tags = entry.tags.slice(0, 4).join('  ');
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.font = '400 28px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillText('#' + tags, pad, H - 120);
+    }
+
+    /* 底部 */
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '400 26px -apple-system, "PingFang SC", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('由 TimeCapsule 记录 · 即刻分享', W / 2, H - 70);
+
+    return canvas;
+  }
+
+  if (shareImageBtn) {
+    shareImageBtn.addEventListener('click', function () {
+      var entry = collectEntry();
+      if (!entry.title && !TC.plainText(entry.body)) {
+        TC.showToast('先写点什么，再生成分享图片吧');
+        return;
+      }
+      try {
+        var canvas = buildShareCard(entry);
+        var url = canvas.toDataURL('image/png');
+        var a = document.createElement('a');
+        var d = new Date();
+        a.href = url;
+        a.download = 'TimeCapsule分享_' + (entry.title ? sanitizeName(entry.title) : '日记') + '.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        TC.showToast('分享图片已生成，正在保存到本地');
+      } catch (err) {
+        TC.showToast('分享图片生成失败，请重试');
+      }
+    });
+  }
 })();
 </script>
 </body>
